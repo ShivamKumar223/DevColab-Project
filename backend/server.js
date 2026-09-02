@@ -3,13 +3,16 @@ import cors from "cors";
 import http from "http";
 import { Server } from "socket.io";
 import cookieParser from "cookie-parser";
+import dotenv from "dotenv";
 
-import projectRoutes from "./projectRoutes.js";
-import { createNewUser, verifyUser, welcome, getAllUsers, getAllEmployees, changePassword } from "../model/users.js";
-import { addNewProject, getAllProjects, currentProjectDetails } from "../model/projectRelated.js";
-import { addTask, getAllTask, updateTaskStatus } from "../model/projectTask.js"
-import { connectDB } from "../config/db.js";
+import projectRoutes from "./controller/projectRoutes.js";
+import { createNewUser, verifyUser, welcome, getAllUsers, getAllEmployees, changePassword } from "./model/users.js";
+import { addNewProject, getAllProjects, currentProjectDetails } from "./model/projectRelated.js";
+import { addTask, getAllTask, updateTaskStatus } from "./model/projectTask.js"
+import connectDB from "./config/db.js";
 
+
+dotenv.config();
 connectDB();     //MongoDB atlas connection
 
 const app = express();

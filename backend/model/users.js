@@ -173,4 +173,4 @@ export const changePassword = async (req, res) => {
 }
 
 // Make sure indexes (like unique) are applied
-await Users.init();
+// await Users.init();
