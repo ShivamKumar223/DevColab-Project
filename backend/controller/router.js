@@ -8,7 +8,9 @@ import projectRoutes from "./projectRoutes.js";
 import { createNewUser, verifyUser, welcome, getAllUsers, getAllEmployees, changePassword } from "../model/users.js";
 import { addNewProject, getAllProjects, currentProjectDetails } from "../model/projectRelated.js";
 import { addTask, getAllTask, updateTaskStatus } from "../model/projectTask.js"
+import { connectDB } from "../config/db.js";
 
+connectDB();     //MongoDB atlas connection
 
 const app = express();
 const server = http.createServer(app);

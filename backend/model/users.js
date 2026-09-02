@@ -1,16 +1,6 @@
 import mongoose from "mongoose";
 
 
-//MongoDB server connection
-try {
-    await mongoose.connect("mongodb://127.0.0.1/DevColab");
-    console.log("MongoDB server connected sucessfully");
-
-} catch (error) {
-    console.log("MongoDB server or Database connection error");
-    process.exit();
-}
-
 // Schema Creaction
 
 const userSchema = new mongoose.Schema(

@@ -1,14 +1,5 @@
 import mongoose from "mongoose";
 
-// Database server connection
-try{
-    await mongoose.connect("mongodb://127.0.0.1/DevColab");
-    console.log("Database connected in projectTask.js");
-}
-catch(error)
-{
-    console.log("Database connection error in projectTask.js",error);
-}
 
 // Schema creation
 const taskSchema = new mongoose.Schema({
