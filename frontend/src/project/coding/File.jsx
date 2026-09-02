@@ -17,8 +17,8 @@ export const File = ({ hide, openFile }) => {
   useEffect(() => {
     const loadTree = async () => {
       try {
-        const res = await fetch(
-          `http://localhost:5000/api/project/${projectId}`
+        const API_URL = import.meta.env.VITE_API_URL;
+        const res = await fetch(`${API_URL}/api/project/${projectId}`
         );
         const data = await res.json();
         setTree(data);
@@ -34,7 +34,8 @@ export const File = ({ hide, openFile }) => {
   const saveTree = async (updatedTree) => {
     setTree(updatedTree);
 
-    await fetch("http://localhost:5000/api/project/update", {
+    const API_URL = import.meta.env.VITE_API_URL;
+    const res = await fetch(`${API_URL}/api/project/update`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

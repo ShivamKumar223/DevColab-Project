@@ -48,8 +48,8 @@ const MainPage = () => {
         const temp = async () => {
             try {
             
-                const res = await fetch(
-                    `http://localhost:5000/api/currentProjectDetails?currentProject=${localStorage.getItem("currentProject")}`,
+                const API_URL = import.meta.env.VITE_API_URL;
+                const res = await fetch(`${API_URL}/api/currentProjectDetails?currentProject=${localStorage.getItem("currentProject")}`,
                     {
                         method:"GET",
                         credentials:"include"
@@ -95,7 +95,8 @@ const MainPage = () => {
              
             const project = localStorage.getItem("currentProject");
            
-           const res = await fetch(`http://localhost:5000/api/addTask?project=${project}`,{
+           const API_URL = import.meta.env.VITE_API_URL;
+            const res = await fetch(`${API_URL}/api/addTask?project=${project}`,{
                 method:"POST",
                 headers:{"Content-Type":"application/json"},
                 body : JSON.stringify(task), 

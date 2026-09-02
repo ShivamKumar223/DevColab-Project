@@ -66,8 +66,8 @@ const Chatboard = () => {
     
      //hendle real-time chatting
     useEffect(() => {
-
-        const newSocket = io("http://localhost:5000");
+        const API_URL = import.meta.env.VITE_API_URL;
+        const newSocket = io(`${API_URL}`);
         
         // newSocket.ID = email; 
         setSocket(newSocket);
@@ -122,13 +122,14 @@ const Chatboard = () => {
             try {
                 // const email = localStorage.getItem("email");
                 // setEmail(email);
-                const res = await fetch(
-                    `http://localhost:5000/api/getProjects`, {
+                const API_URL = import.meta.env.VITE_API_URL;
+                const res = await fetch(`${API_URL}/api/getProjects`, {
                     method: "GET",
                     credentials: "include"
                 });
 
-                const res1 = await fetch(`http://localhost:5000/api/getUsername`, {
+
+                const res1 = await fetch(`${API_URL}/api/getUsername`, {
                     method: "GET",
                     credentials: "include"
                 })

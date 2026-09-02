@@ -26,7 +26,7 @@ const server = http.createServer(app);
 // });
 const io = new Server(server,{
     cors:{
-        origin:"devcolab.netlify.app",
+        origin:"https://devcolab.netlify.app",
         methods : ["GET", "POST"],
         credentials: true,
     }
@@ -41,7 +41,7 @@ const io = new Server(server,{
 // );
 app.use(
   cors({
-    origin: "devcolab.netlify.app",
+    origin: "https://devcolab.netlify.app",
     methods: ["GET", "POST", "PATCH","PUT", "DELETE"],
     credentials: true,
   })

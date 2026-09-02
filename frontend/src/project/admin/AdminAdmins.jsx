@@ -9,7 +9,8 @@ export const AdminAdmins =()=>{
              })
     const companyCode = userDetails.companyCode;
     const getAllUsers = async()=>{
-         const res = await fetch(`http://localhost:5000/admin/getAllUsers?companyCode=${companyCode.trim()}`,{
+         const API_URL = import.meta.env.VITE_API_URL;
+         const res = await fetch(`${API_URL}/admin/getAllUsers?companyCode=${companyCode.trim()}`,{
             method:"GET",
             credentials:"include",
          });

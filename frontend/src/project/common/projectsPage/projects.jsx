@@ -30,11 +30,13 @@ const Projects = ()=>{
     useEffect(()=>{
        const getProjects = async ()=>{
          try{
-          const res = await fetch(`http://localhost:5000/api/getProjects`,{
+          const API_URL = import.meta.env.VITE_API_URL;
+         const res = await fetch(`${API_URL}/api/getProjects`,{
             method:"GET",
             credentials:"include"
           })
-          const res1 = await fetch(`http://localhost:5000/api/allTask`,{
+
+            const res1 = await fetch(`${API_URL}/api/allTask`,{
             method:"GET",
             credentials:"include"
           })

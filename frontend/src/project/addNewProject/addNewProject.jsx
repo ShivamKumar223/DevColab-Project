@@ -46,7 +46,8 @@ const ProjectDetails = () => {
   }
 
   const getAllEmployee = async () => {
-    const res = await fetch('http://localhost:5000/api/getAllEmployees', {
+    const API_URL = import.meta.env.VITE_API_URL;
+    const res = await fetch(`${API_URL}/api/getAllEmployees`, {
       method: "GET",
       credentials: "include"
     })
@@ -67,7 +68,8 @@ const ProjectDetails = () => {
     const conpanyCode = localStorage.getItem("conpanyCode");
     const empID = localStorage.getItem("empID");
     try {
-      const res = await fetch(`http://localhost:5000/api/addNewProject`, {
+      const API_URL = import.meta.env.VITE_API_URL;
+     const res = await fetch(`${API_URL}/api/addNewProject`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },

@@ -11,13 +11,15 @@ export const ForgetPassword = () => {
                    return user.pNumber;
                   })
      const [otp, setOTP] = useState("");
+     
+     const API_URL = import.meta.env.VITE_API_URL;
     
      const sendOTP = async () => {
-       await axios.post("http://localhost:5000/send-otp", { mobile });
+       await axios.post(`${API_URL}/send-otp`, { mobile });
        };
 
     const verifyOTP = async () => {
-        const res = await axios.post("http://localhost:5000/verify-otp", {
+        const res = await axios.post(`${API_URL}/verify-otp`, {
         mobile,
         otp
         });

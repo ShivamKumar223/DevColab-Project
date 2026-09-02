@@ -13,7 +13,8 @@ export const HomePage = ()=>{
     const  email = localStorage.getItem("email")
     const  companyCode = localStorage.getItem("companyCode")
     const  empID = localStorage.getItem("empID")
-    const res = await fetch(`http://localhost:5000/api/welcome`,{
+    const API_URL = import.meta.env.VITE_API_URL;
+    const res = await fetch(`${API_URL}/api/welcome`,{
       method:"GET",
       credentials:"include"
     });

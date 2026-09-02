@@ -9,7 +9,8 @@ export const Welcome = ()=>{
  useEffect(()=>{
   const welcome = async ()=>{
     try{
-    const res = await fetch(`http://localhost:5000/api/welcome`,{
+    const API_URL = import.meta.env.VITE_API_URL;
+    const res = await fetch(`${API_URL}/api/welcome`,{
       method:"GET",
       credentials:"include",
     });

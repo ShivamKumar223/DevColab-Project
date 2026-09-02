@@ -108,7 +108,8 @@ int main() {
   //To update task status
   const updateTaskStatus = async()=>{
  
-    const res = await fetch("http://localhost:5000/api/updateTaskStatus",{
+    const API_URL = import.meta.env.VITE_API_URL;
+    const res = await fetch(`${API_URL}/api/updateTaskStatus`,{
       method:"PATCH",
       headers:{
         "Content-type": "application/json"

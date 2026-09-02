@@ -24,7 +24,8 @@ const MainContent = () =>{
      useEffect(()=>{
       const getAllTask = async ()=>{
          try{
-          const res = await fetch(`http://localhost:5000/api/allTask`,{
+          const API_URL = import.meta.env.VITE_API_URL;
+            const res = await fetch(`${API_URL}/api/allTask`,{
             method:"GET",
             credentials:"include"
           })
