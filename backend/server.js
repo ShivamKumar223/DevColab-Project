@@ -17,17 +17,31 @@ connectDB();     //MongoDB atlas connection
 
 const app = express();
 const server = http.createServer(app);
+// const io = new Server(server,{
+//     cors:{
+//         origin:"http://localhost:5173",
+//         methods : ["GET", "POST"],
+//         credentials: true,
+//     }
+// });
 const io = new Server(server,{
     cors:{
-        origin:"http://localhost:5173",
+        origin:"devcolab.netlify.app",
         methods : ["GET", "POST"],
         credentials: true,
     }
 });
 
+// app.use(
+//   cors({
+//     origin: "http://localhost:5173",
+//     methods: ["GET", "POST", "PATCH","PUT", "DELETE"],
+//     credentials: true,
+//   })
+// );
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "devcolab.netlify.app",
     methods: ["GET", "POST", "PATCH","PUT", "DELETE"],
     credentials: true,
   })
@@ -103,4 +117,5 @@ app.patch("/api/updateTaskStatus",(req, res)=>updateTaskStatus(req, res))
 
 app.patch("/api/changePassword", (req, res)=>changePassword(req, res));
 
-server.listen(5000,()=>console.log("Server listen on port ",5000));
+const PORT = process.env.PORT || 5000;
+server.listen(PORT, ()=>console.log("Server listen on port ",PORT));
