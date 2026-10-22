@@ -1,29 +1,37 @@
-import { useEffect, useState } from "react";
-import Cookies from "js-cookie";
-
 import { Navbar } from "../common/navbar.jsx";
+import { AdminMenu } from "./adminLeftMenu.jsx";
 import { User } from "../common/user.jsx";
-import { AdminMenu } from "./adminLeftMenu.jsx"
 import { Welcome } from "./welcome.jsx";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 
-// import { AdminAllCandidates } from "./AdminAllCandidates.jsx";
-// import { AdminAdmins } from "./AdminAdmins.jsx";
-// import { AdminMentors } from "./AdminMentors.jsx";
-// import { AdminEmployees } from "./AdminEmployees.jsx";
+export const AdminDashboard = () => {
+    const location = useLocation();
 
-// import {ActivityFeed} from "../activityFeed.jsx";
-
-
-export const AdminDashboard = ()=>{
-   
     return (
-        <>  
-           <Navbar/>
-           <AdminMenu/>
-           <User/>
-           <Welcome/>
-           <Outlet />
-        </>
-    )
-}
+        <div className="min-h-screen bg-gray-700 text-white relative overflow-x-hidden flex flex-col">
+            {/* Top Navbar */}
+            <Navbar />
+
+            {/* Main Content Layout */}
+            <div className="flex flex-col md:flex-row flex-1 relative">
+                {/* Admin Sidebar Navigation */}
+                <AdminMenu />
+
+                {/* Right Side Content Container */}
+                <div className="w-full md:w-[80%] md:ml-[20%] flex flex-col min-h-screen pb-24 md:pb-6 bg-gray-700">
+                    
+                    {/* Welcome Banner - Top me render hoga */}
+                    <Welcome />
+
+                    {/* Sub-routes like candidateform / task forms will render here */}
+                    <div className="flex-1 p-4 md:p-6">
+                        <Outlet />
+                    </div>
+
+                    {/* Bottom User Profile Panel */}
+                    <User />
+                </div>
+            </div>
+        </div>
+    );
+};

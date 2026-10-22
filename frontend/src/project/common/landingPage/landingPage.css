@@ -1,23 +1,8 @@
-#landingPage{
-   height:175rem;
-   /* background-image: linear-gradient(to right,blue,red); */
-}
-.hidden{
-    display:none;
-}
-.notHidden{
-    display:flex;
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+#landingPage {
+   min-height: 100vh;
+   width: 100%;
 }
 
-.signupInput::placeholder{
-    
-   background-color: aqua;
-}
-.signup{
-    background-color: blue;
-}
-
-.custom-shadow{
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+.custom-shadow {
+   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }

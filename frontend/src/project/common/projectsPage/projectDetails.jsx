@@ -8,242 +8,221 @@ import { LeftMenu } from "../leftMenu.jsx";
 import { NavLink } from "react-router-dom";
 
 export const ProjectDetails = () => {
-
     return (
-        <>
+        <div className="min-h-screen bg-gray-700 text-white relative overflow-x-hidden">
             <Navbar />
-            <LeftMenu />
-            <User />
-            <MainPage />
-        </>
+            <div className="flex flex-col md:flex-row">
+                <LeftMenu />
+                <div className="w-full md:w-[80%] md:ml-[20%] flex flex-col">
+                    <User />
+                    <MainPage />
+                </div>
+            </div>
+        </div>
     )
 }
-
 
 const MainPage = () => {
     const [task, setTask] = useState({ taskTitle: "", description: "", assignTo: [], startDate: "", dueDate: "" });
     const [tasks, setTasks] = useState([]);
     const [formToggle, setFormToggle] = useState(false);
-    const [user, setUser] = useState(()=>{
+    const [user, setUser] = useState(() => {
         return JSON.parse(Cookies.get("DevColab"));
-    })
-    const handleFormHidden = ()=>{
-        setFormToggle(false);
-    }
-    const handleFormShow = ()=>{
-        setFormToggle(true)
-    }
+    });
+
+    const handleFormHidden = () => setFormToggle(false);
+    const handleFormShow = () => setFormToggle(true);
 
     const [currentProject, setCurrentProject] = useState({});
-    let {startDate, dueDate} = currentProject;
-    startDate=new Date(startDate);
-    startDate = startDate.toLocaleDateString();
-    // console.log(startDate)
-
-    dueDate=new Date(dueDate);
-    dueDate = dueDate.toLocaleDateString();
-    // console.log(dueDate)
+    let { startDate, dueDate } = currentProject;
+    startDate = startDate ? new Date(startDate).toLocaleDateString() : "";
+    dueDate = dueDate ? new Date(dueDate).toLocaleDateString() : "";
 
     useEffect(() => {
         const temp = async () => {
             try {
-            
                 const API_URL = import.meta.env.VITE_API_URL;
-                const res = await fetch(`${API_URL}/api/currentProjectDetails?currentProject=${localStorage.getItem("currentProject")}`,
-                    {
-                        method:"GET",
-                        credentials:"include"
-                    }
-                );
-                const {projectDetails,allTask} = await res.json();
-                // console.log("project Details",projectDetails);
-                // console.log("task",tasks)
-                // {name,description,assignTo,startDate,dueDate,}
+                const res = await fetch(`${API_URL}/api/currentProjectDetails?currentProject=${localStorage.getItem("currentProject")}`, {
+                    method: "GET",
+                    credentials: "include"
+                });
+                const { projectDetails, allTask } = await res.json();
                 
-                if (res.ok ) {
-                    // console.log("t: ",tasks)
-                    setTasks([...allTask])
-                    // console.log(allTask)
-                    setCurrentProject({...projectDetails})
+                if (res.ok) {
+                    setTasks([...allTask]);
+                    setCurrentProject({ ...projectDetails });
                 }
             } catch (error) {
-                console.log("Error to fetching project details or try block in projectDetails.jsx", error);
+                console.log("Error fetching project details in projectDetails.jsx", error);
             }
         };
         temp();
     }, []);
 
-//   console.log(user.role);  
-
     const handleCheckbox = (e) => {
         const value = e.target.value;
-        const assignTo = task.assignTo;
+        const assignTo = [...task.assignTo];
 
         if (e.target.checked)
             setTask({ ...task, assignTo: [...assignTo, value] });
         else {
             const ind = assignTo.indexOf(value);
-            assignTo.splice(ind, 1);
+            if (ind > -1) assignTo.splice(ind, 1);
             setTask({ ...task, assignTo });
         }
     }
 
-    const handleSubmit = async(e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-       
-        try{
-             
+        try {
             const project = localStorage.getItem("currentProject");
+            const API_URL = import.meta.env.VITE_API_URL;
+            const res = await fetch(`${API_URL}/api/addTask?project=${project}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(task),
+                credentials: "include"
+            });
+            const { message, success } = await res.json();
            
-           const API_URL = import.meta.env.VITE_API_URL;
-            const res = await fetch(`${API_URL}/api/addTask?project=${project}`,{
-                method:"POST",
-                headers:{"Content-Type":"application/json"},
-                body : JSON.stringify(task), 
-                credentials:"include"
-            })
-// console.log("project",res)
-        const {message, success} = await res.json();
-       
-           if(res.ok && success)
-            {
+            if (res.ok && success) {
                 alert(message);
-                setTasks([...tasks,task])
-                // console.log("all good")
+                setTasks([...tasks, task]);
+                setFormToggle(false);
+                setTask({ taskTitle: "", description: "", assignTo: [], startDate: "", dueDate: "" });
+            } else {
+                alert(message);
             }
-            else{
-                alert(message)
-            }
-
-        }
-        catch{
-            console.log("Error occurs in to creation of task in projectDetails.jsx")
-        }          
-        // console.log(task);
-        // setTask({ ...task, taskTitle: "", description: "", assignTo: [], startDate: "", dueDate: "" });
+        } catch {
+            console.log("Error occurs in creation of task in projectDetails.jsx");
+        }         
     }
 
-     const handleTask = async(task) =>{
-                    
-                    Cookies.set('currentTask', JSON.stringify(task));
-                } 
+    const handleTask = async (task) => {
+        Cookies.set('currentTask', JSON.stringify(task));
+    } 
+
     return (
-        <div className="h-full w-[80%] bg-gray-700  rounded-[1px] absolute  right-0 overflow-auto scrollbar-none">
-            <div className="p-5 h-[105%] w-[90%] bg-gray-800 rounded-[5px] mx-[3.64rem] my-5 "  >
-                <div className="bg-blue-500 min-h-[10rem] rounded-[5px] p-3">
-                   <div className="flex justify-between">
-                     <h1 className="text-[1.5rem] min-h-[5px] break-words w-[80%] "><b>{currentProject.name}</b></h1>
+        <div className="w-full bg-gray-700 p-4 md:p-6 text-white overflow-auto scrollbar-none">
+            <div className="p-4 md:p-6 w-full bg-gray-800 rounded-lg shadow-lg">
+                {/* Project Overview Card */}
+                <div className="bg-blue-600 min-h-[10rem] rounded-lg p-4 md:p-6 shadow flex flex-col justify-between gap-4">
+                   <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                     <h1 className="text-xl md:text-[1.5rem] font-bold w-full sm:w-[80%] break-words">{currentProject.name}</h1>
                      <button onClick={handleFormShow} 
-                         className={`${user.role=="Employee"?"hidden":" "} h-[2rem] w-[7rem] bg-gray-900 rounded-[5px] hover:text-[0.9rem] `}
-                         title="click to add new task in this project">+ New task</button>
+                         className={`${user.role === "Employee" ? "hidden" : "block"} h-10 px-4 bg-gray-900 rounded-md hover:bg-gray-800 transition-all text-sm font-medium whitespace-nowrap`}
+                         title="Click to add new task in this project">+ New Task</button>
                    </div>
-                    <div className="min-h-[5px] text-black break-words p-2">
-                        <p>{currentProject.description} </p>
-                    </div>
+                   
+                   <div className="text-gray-100 text-sm md:text-base break-words">
+                       <p>{currentProject.description}</p>
+                   </div>
 
-                    <div>
-                        <ul className="w-full flex flex-wrap gap-5 text-gray-200 py-2 ">
-                            {
-                                currentProject.assignTo?.map((dev) =>
-                                  <li key={dev}>{dev}</li>
-                                   
-                                
-                                )
-                            }
+                   <div>
+                       <ul className="w-full flex flex-wrap gap-2 text-xs md:text-sm text-gray-200">
+                           {
+                               currentProject.assignTo?.map((dev) =>
+                                   <li key={dev} className="bg-blue-700 px-3 py-1 rounded-full">{dev}</li>
+                               )
+                           }
+                       </ul>
+                   </div>
 
-                        </ul>
-                    </div>
-                    <div className=" h-[3rem] w-full flex justify-between items-center">
-                       <p className="text-gray-200">{`Start Date : ${startDate}`}</p>
-                       <p className="text-gray-200">{`Due Date : ${dueDate}`}</p>
-                    </div>
+                   <div className="flex flex-col sm:flex-row justify-between items-center text-xs md:text-sm text-gray-200 pt-2 border-t border-blue-500/40">
+                       <p>{`Start Date : ${startDate}`}</p>
+                       <p>{`Due Date : ${dueDate}`}</p>
+                   </div>
                 </div>
 
-                <div className="flex gap-2 h-[70%] ">
-                    
+                {/* Content Section: Form & Tasks */}
+                <div className="flex flex-col lg:flex-row gap-6 mt-6">
+                    {/* Add Task Form */}
                     <form onSubmit={handleSubmit} 
-                    className={`${formToggle?"flex ":"hidden"}  flex-col gap-2 justify-evenly w-[50%] h-[104%] items-center 
-                        bg-gray-700 p-5 pb-2 my-5 rounded-[2px] text-black `
-                    }>
-                       <div className="h-[2rem] items-center flex-row-reverse flex w-full">
-                        <div onClick={handleFormHidden} className="h-[1.5rem] w-[1.5rem] bg-gray-500 rounded-[5rem] flex justify-center items-center text-[1.2rem] text-black hover:text-[1.4rem] hover:text-white"><IoIosClose /></div>
+                        className={`${formToggle ? "flex" : "hidden"} flex-col gap-4 w-full lg:w-1/2 bg-gray-700 p-5 rounded-lg shadow border border-gray-600 text-white`}
+                    >
+                       <div className="flex justify-end">
+                        <div onClick={handleFormHidden} className="h-8 w-8 bg-gray-600 rounded-full flex justify-center items-center text-xl cursor-pointer hover:bg-gray-500 transition-all"><IoIosClose /></div>
                        </div>
-                        <div className="flex flex-col w-full  ">
-                            <label htmlFor="title">Title</label>
-                            <input  onChange={(e) => setTask({ ...task, taskTitle: e.target.value })} 
-                            value={task.title} type="text" id="title" className="h-[2rem] bg-gray-900 rounded-[3px] px-2" 
-                            required placeholder="Enter task title"/>
-                        </div>
-                        <div className="flex flex-col w-full">
-                            <label htmlFor="description">Description</label>
-                            <textarea onChange={(e) => setTask({ ...task, description: e.target.value })} 
-                            value={task.description} id="description" rows={3} className="rounded-[3px] px-2 bg-gray-900" 
-                            placeholder="Write somthing about your project"></textarea>
-                        </div>
-                        <ul className="h-[10rem] w-[100%] grid grid-cols-2 auto-rows-[50px] overflow-y-scroll scrollbar-none border-black border-2 px-5 py-2">
-                          { 
-                             currentProject.assignTo?.map((empID, ind)=>{
-                              return  <li key={ind}>
-                                 <label className="flex items-center gap-3" htmlFor={ind}>
-                                 <input onChange={handleCheckbox} id={ind} className="h-5 w-5" type="checkbox" value={empID} />{empID}</label>
-                               </li>
-                       })
-                          }
-                         </ul>
-                        <div className="flex flex-col w-full">
-                            <label htmlFor="startDate">Start Date</label>
-                            <input onChange={(e) => setTask({ ...task, startDate: e.target.value })} 
-                            value={task.startDate} type="date" id="startDate" 
-                            className="h-[2rem] rounded-[3px] px-2 bg-gray-900 text-white" required/>
-                        </div>
-                        <div className="flex flex-col w-full">
-                            <label htmlFor="dueDate">Due Date</label>
-                            <input onChange={(e) => setTask({ ...task, dueDate: e.target.value })} 
-                            value={task.dueDate} type="date" id="dueDate" 
-                            className="h-[2rem] rounded-[3px] px-2 bg-gray-900 text-white" required/>
-                        </div>
-                        <button className="bg-blue-600 border-[1px] border-white mt-5 h-[3rem] w-[50%] rounded-[2rem] hover:text-[0.9rem]" type="submit">Add Task</button>
+                       
+                       <div className="flex flex-col w-full">
+                           <label htmlFor="title" className="text-sm font-medium mb-1">Title</label>
+                           <input onChange={(e) => setTask({ ...task, taskTitle: e.target.value })} 
+                           value={task.taskTitle} type="text" id="title" className="h-10 bg-gray-900 rounded px-3 text-sm text-white" 
+                           required placeholder="Enter task title"/>
+                       </div>
+
+                       <div className="flex flex-col w-full">
+                           <label htmlFor="description" className="text-sm font-medium mb-1">Description</label>
+                           <textarea onChange={(e) => setTask({ ...task, description: e.target.value })} 
+                           value={task.description} id="description" rows={3} className="rounded p-3 bg-gray-900 text-sm text-white" 
+                           placeholder="Write something about your task"></textarea>
+                       </div>
+
+                       <div className="flex flex-col">
+                           <label className="text-sm font-medium mb-1">Assign Members</label>
+                           <ul className="max-h-40 w-full grid grid-cols-1 sm:grid-cols-2 gap-2 overflow-y-auto scrollbar-none border border-gray-600 bg-gray-900 p-3 rounded">
+                             { 
+                                currentProject.assignTo?.map((empID, ind) => (
+                                    <li key={ind} className="flex items-center gap-2">
+                                       <input onChange={handleCheckbox} id={`emp-${ind}`} className="h-4 w-4" type="checkbox" value={empID} />
+                                       <label className="text-sm truncate cursor-pointer" htmlFor={`emp-${ind}`}>{empID}</label>
+                                    </li>
+                                ))
+                             }
+                           </ul>
+                       </div>
+
+                       <div className="flex flex-col sm:flex-row gap-4">
+                           <div className="flex flex-col w-full sm:w-1/2">
+                               <label htmlFor="startDate" className="text-sm font-medium mb-1">Start Date</label>
+                               <input onChange={(e) => setTask({ ...task, startDate: e.target.value })} 
+                               value={task.startDate} type="date" id="startDate" 
+                               className="h-10 rounded px-3 bg-gray-900 text-white text-sm" required/>
+                           </div>
+                           <div className="flex flex-col w-full sm:w-1/2">
+                               <label htmlFor="dueDate" className="text-sm font-medium mb-1">Due Date</label>
+                               <input onChange={(e) => setTask({ ...task, dueDate: e.target.value })} 
+                               value={task.dueDate} type="date" id="dueDate" 
+                               className="h-10 rounded px-3 bg-gray-900 text-white text-sm" required/>
+                           </div>
+                       </div>
+
+                       <button className="bg-blue-600 hover:bg-blue-700 transition-all mt-4 h-11 w-full sm:w-1/2 mx-auto rounded-full font-medium text-sm shadow" type="submit">Add Task</button>
                     </form>
 
-                    <div className={`${formToggle?"w-[50%]":"w-full"}
-                     flex flex-col gap-3 h-[104%] bg-gray-700 p-5 my-5 
-                     rounded-[2px] text-black overflow-auto  scrollbar-none
-                     transition-all duration-500 ease-linear`}>
-                        <div className="h-[2rem] text-[1.5rem]"><h1>Tasks</h1></div>
-                        {
-                            tasks.map((currTask,ind) => {
-                                let startDate = currTask.startDate;
-                                startDate = new Date(startDate);
-                                startDate = startDate.toLocaleDateString();
+                    {/* Task List */}
+                    <div className={`${formToggle ? "w-full lg:w-1/2" : "w-full"} flex flex-col gap-4 bg-gray-700 p-4 rounded-lg shadow transition-all duration-300`}>
+                        <h2 className="text-xl font-bold border-b border-gray-600 pb-2">Tasks</h2>
+                        <div className="flex flex-col gap-3 max-h-[70vh] overflow-y-auto scrollbar-none">
+                            {
+                                tasks.map((currTask, ind) => {
+                                    let sDate = currTask.startDate ? new Date(currTask.startDate).toLocaleDateString() : "";
+                                    let dDate = currTask.dueDate ? new Date(currTask.dueDate).toLocaleDateString() : "";
 
-                                let dueDate = currTask.dueDate;
-                                dueDate = new Date(dueDate);
-                                dueDate = dueDate.toLocaleDateString();
-                                return <div key={`parant${ind+1}`} className="bg-gray-700 w-[100%] min-h-[10rem] rounded-[5px] p-3
-                                shadow-[0px_3px_8px_rgba(0,0,0,0.24)] hover:shadow-2xl ">
-                                    <h1 className="text-[1.5rem] min-h-[5px] break-words"><b>{currTask.taskTitle}</b></h1>
+                                    return <div key={`parent-${ind}`} className="bg-gray-800 w-full min-h-[8rem] rounded-lg p-4 shadow border border-gray-700 flex flex-col justify-between gap-2">
+                                        <h3 className="text-lg font-bold break-words">{currTask.taskTitle}</h3>
 
-                                    <div className="min-h-[5px] text-gray-900 break-words p-2 overflow-y-scroll scrollbar-none">
-                                        <p>{currTask.description} </p>
+                                        <div className="text-gray-300 text-sm break-words py-1">
+                                            <p>{currTask.description}</p>
+                                        </div>
+
+                                        <div className="flex flex-wrap gap-1 text-xs text-gray-400">
+                                            {
+                                                currTask.assignTo?.map((person, i) => (
+                                                    <span key={`child-${i}`} className="bg-gray-900 px-2 py-0.5 rounded">{person}</span>
+                                                ))
+                                            }
+                                        </div>
+
+                                        <div className="flex flex-col sm:flex-row justify-between items-center pt-2 border-t border-gray-700 text-xs sm:text-sm gap-2">
+                                            <p className="text-green-400">Start: {sDate}</p>
+                                            <NavLink onClick={() => handleTask(currTask)} to="/coding" className="text-blue-400 hover:underline font-medium">Let's Start</NavLink>
+                                            <p className="text-red-400">Due: {dDate}</p>
+                                        </div>
                                     </div>
-                                    <ul className="w-[100%] min-h-5   break-words text-gray-400 ">
-                                        {
-                                            currTask.assignTo.map((person, ind) => {
-                                                
-                                                return <span key={`child${ind+1}`} className="mx-2 ">{person}</span>
-                                            })
-                                        }
-                                    </ul>
-
-                                    <div className="flex justify-between px-5">
-                                        <p className="text-green-500">{startDate}</p>
-                                        <NavLink onClick={()=>handleTask(currTask)} to="/coding" className={`text-white underline hover:text-gray-400 `}>Let's Start</NavLink>
-                                        <p className="text-red-500">{dueDate}</p>
-                                    </div>
-                                </div>
-
-                            })
-                        }
+                                })
+                            }
+                        </div>
                     </div>
                 </div>
             </div>

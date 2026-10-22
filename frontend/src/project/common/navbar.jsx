@@ -1,201 +1,230 @@
-import { FaMoon, FaDev} from "react-icons/fa";
-import { IoMdNotifications } from "react-icons/io";
 import { ImProfile } from "react-icons/im";
 import { NavLink } from "react-router-dom";
 import Cookies from "js-cookie";
-
 import { IoClose } from "react-icons/io5";
-// for alert(toast) 
 import { toast } from "react-toastify";
-
 import Badge from "@mui/material/Badge";
 import IconButton from "@mui/material/IconButton";
-// import NotificationsIcon from "@mui/icons-material/Notifications";
+import { IoMdNotifications } from "react-icons/io";
 import { useEffect, useState } from "react";
 
+export const Navbar = () => {
+    const [user, setUser] = useState(() => {
+        try {
+            const cookieVal = Cookies.get("DevColab");
+            return cookieVal ? JSON.parse(cookieVal) : { name: "User", role: "Developer", createdAt: new Date() };
+        } catch {
+            return { name: "User", role: "Developer", createdAt: new Date() };
+        }
+    });
 
-
-export const Navbar =()=>{
-    const [user, setUser] = useState(()=>{
-        return JSON.parse(Cookies.get("DevColab"));
-    })
-    let joiningDate = user.createdAt;
-        joiningDate = new Date(joiningDate)
-        joiningDate = joiningDate.toLocaleDateString();
-        
-    // console.log(joiningDate)
-     const [count, setCount] = useState(0);
-     const [toggleProfile, setToggleProfile] = useState(false);
-     const [toggleNotification, setToggleNotification] = useState(false);
-     const [toggleChangePassword, setToggleChangePassword] = useState(true);
-
-     const handleChangePassword = () =>{
-        // console.log("shivam")
-        setToggleChangePassword(!toggleChangePassword)
-     }
-
-     const handleToggleProfile = () =>{
-        
-        setToggleProfile((pre)=> !pre)
-     }
-
-     const handleToggleNotification = () =>{
-
-        setToggleNotification((pre) => !pre)
-     }
-
-    return(
+    let joiningDate = user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "";
     
-        <div className="h-[5rem] relative flex justify-between items-center bg-gray-900">
-            <div className="text-[2.2rem] bg-blue-600 flex items-center gap-5 justify-center w-[20%] h-10 rounded-[5px]">
-                <NavLink to="/dashboard" ><img className="h-[10rem] "  src="/DevColab-logo-transparent.png" alt="" /></NavLink>
-                {/* <a className="text-[1rem] hover:cursor-pointer hover:text-[0.9rem] h-10 w-[5rem] flex items-center justify-center">Dashboard</a> */}
-            </div> 
-            <div className=" w-[50%] flex justify-evenly">
-                {/* <input className="h-[2.2rem] w-[70%] rounded-[3rem] bg-gray-500 text-black px-5" type="text" placeholder="search..."/>
-                <button className="bg-blue-500 w-[15%] h-[2.2rem]  rounded-[3rem] hover:text-[0.9rem]">Search</button> */}
-            </div>
-            <div className="right-10 text-[1.4rem] h-[2rem] w-[20%] flex justify-evenly items-center">
-                {/* <button className="hover:text-[1.1rem] h-[2rem] w-[2rem] text-[1.2rem] " title="Click to switch mood"><FaMoon/></button> */}
-                         <IconButton className="h-[2rem] w-[2rem]"  title="notification" onClick={() => {setCount(count + 1); handleToggleNotification()}}>
-                             <Badge badgeContent={count} color="error">
-                             <IoMdNotifications className="active:h-[1.3rem] active:w-[1.3rem] h-[1.5rem] w-[1.5rem] text-white " />
-                             </Badge>
-                         </IconButton>
-                <button onClick={handleToggleProfile} className="hover:text-[1.4rem] h-[2rem] w-[2rem] text-[1.5rem]" title="profile"><ImProfile /></button>
-            </div>
-           <Profile toggleProfile={toggleProfile} user={user} joiningDate={joiningDate} handleChangePassword={handleChangePassword}/>
-           <Notifications toggleNotification={toggleNotification}/>
-           <ChangePassword user={user} toggleChangePassword={toggleChangePassword}/>
-        </div>
-    
-    )
-}
+    const [count, setCount] = useState(0);
+    const [toggleProfile, setToggleProfile] = useState(false);
+    const [toggleNotification, setToggleNotification] = useState(false);
+    const [toggleChangePassword, setToggleChangePassword] = useState(true);
 
-
-
-const Profile = ({toggleProfile, user, joiningDate, handleChangePassword}) =>{
-
-    return (
-         <div className={`${toggleProfile?"" : "hidden"} absolute right-1 top-[5rem] z-10 bg-gray-800 h-[35rem] w-[20rem] rounded-[5px] p-[5px] pl-10 flex flex-col gap-4 border-[1px] border-white`}>
-                <b className="text-[1.1rem]"> My Profile</b>
-                <img className="h-[5rem] w-[5rem] rounded-[5rem]  mt-5" src="/shivam.jpg" alt="my pic" />
-                <pre className="flex">Name         : <div className="overflow-x-scroll scrollbar-none w-[150px]">{user.name}</div></pre>
-                <pre className="flex">Role         : <div className="overflow-x-scroll scrollbar-none w-[150px]">{user.role}</div></pre>
-                <pre className={`${user.role=='user'?"hidden":""} flex`}>ID           : <div className="overflow-x-scroll scrollbar-none w-[150px]">{user.empID}</div></pre>
-                <pre className={`${user.role=='user'?"hidden":""} flex`}>Company Code : <div className="overflow-x-scroll scrollbar-none w-[150px]">{user.companyCode}</div></pre>
-                <pre className="flex">Joining Date : <div className="overflow-x-scroll scrollbar-none w-[150px]">{joiningDate}</div></pre>
-                <pre className="flex">Phone        : <div className="overflow-x-scroll scrollbar-none w-[150px]">{user.pNumber}</div></pre>
-                <pre className="flex">Email        : <div className="overflow-x-scroll scrollbar-none w-[150px]">{user.email}</div></pre>
-                <div className="w-full flex justify-center">
-                    <button onClick={handleChangePassword} className="rounded-[2rem] w-[60%] h-[2rem] border-white border-[2px] hover:underline" >Change Password</button>
-                </div>
-            </div>
-    )
-}
-
-
-const Notifications = ({toggleNotification})=>{
-    let arr = [1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5,]
-
-    return (
-        <div className={`${toggleNotification?"" : "hidden"} 
-        absolute right-1 top-[5rem] z-10 bg-blue-500 h-[40rem] w-[20rem] 
-        rounded-[5px] p-[5px] pl-5 flex flex-col gap-4`}>
-            <b>Notifications</b>
-         <div className="h-[36.8rem] w-[100%] flex flex-col gap-1 overflow-y-scroll scrollbar-none">
-            {
-                arr.map((item)=>{
-                 return <div className="h-[3rem] bg-white rounded-[3px] text-black">
-                          {item}<br></br>
-                          {item}<br></br>
-                          
-                       </div>
-                })
-            }
-         </div>
-        </div>
-    )
-}
-
-// Handle Change Password
-const ChangePassword = ({user, toggleChangePassword}) =>{
-    // console.log(toggleChangePassword)
-    const [password, setPassword] = useState({oldPassword:"", newPassword:"", confirmPassword:""});
-    const [close, setClose] = useState(toggleChangePassword)
-
-    useEffect(()=>setClose(toggleChangePassword),[toggleChangePassword])
-    const handleClose = () =>{
-
-        setClose(true);
+    const handleChangePassword = () => {
+        setToggleChangePassword(!toggleChangePassword);
+        setToggleProfile(false);
     }
 
-    const handleSubmit = async(e) =>{
-        // console.log(password)
+    const handleToggleProfile = () => {
+        setToggleProfile((pre) => !pre);
+        setToggleNotification(false);
+    }
+
+    const handleToggleNotification = () => {
+        setToggleNotification((pre) => !pre);
+        setToggleProfile(false);
+    }
+
+    return (
+        <header className="h-16 md:h-20 relative flex justify-between items-center bg-gray-900 px-4 md:px-6 shadow-md border-b border-gray-800 z-30">
+            {/* Logo Section */}
+            <div className="flex items-center">
+                <NavLink to="/dashboard" className="flex items-center">
+                    <img className="lg:h-[10rem] md:h-16 object-contain" src="/DevColab-logo-transparent.png" alt="Logo" />
+                </NavLink>
+            </div> 
+
+            {/* Right Action Icons */}
+            <div className="flex items-center gap-3 md:gap-4 relative">
+                <IconButton className="text-white" title="Notifications" onClick={() => { setCount(count + 1); handleToggleNotification(); }}>
+                    <Badge badgeContent={count} color="error">
+                        <IoMdNotifications className="text-xl md:text-2xl text-white" />
+                    </Badge>
+                </IconButton>
+
+                <button onClick={handleToggleProfile} className="text-xl md:text-2xl text-white hover:text-blue-400 transition-all p-1" title="Profile">
+                    <ImProfile />
+                </button>
+            </div>
+
+            {/* Dropdown Modals */}
+            <Profile toggleProfile={toggleProfile} user={user} joiningDate={joiningDate} handleChangePassword={handleChangePassword} />
+            <Notifications toggleNotification={toggleNotification} />
+            <ChangePassword user={user} toggleChangePassword={toggleChangePassword} setToggleChangePassword={setToggleChangePassword} />
+        </header>
+    )
+}
+
+const Profile = ({ toggleProfile, user, joiningDate, handleChangePassword }) => {
+    if (!toggleProfile) return null;
+
+    return (
+        <div className="absolute right-2 top-16 md:top-20 z-40 bg-gray-800 w-[90%] max-w-xs rounded-lg p-5 shadow-2xl border border-gray-700 flex flex-col gap-3 text-sm text-white">
+            <h3 className="font-bold text-base border-b border-gray-700 pb-2">My Profile</h3>
+            <div className="flex justify-center my-2">
+                <img className="h-16 w-16 rounded-full object-cover border-2 border-blue-500 shadow" src="/shivam.jpg" alt="Profile" />
+            </div>
+            <div className="flex justify-between border-b border-gray-700/50 pb-1">
+                <span className="text-gray-400">Name:</span>
+                <span className="font-medium truncate max-w-[150px]">{user.name}</span>
+            </div>
+            <div className="flex justify-between border-b border-gray-700/50 pb-1">
+                <span className="text-gray-400">Role:</span>
+                <span className="font-medium truncate max-w-[150px]">{user.role}</span>
+            </div>
+            {user.role !== 'user' && (
+                <div className="flex justify-between border-b border-gray-700/50 pb-1">
+                    <span className="text-gray-400">ID:</span>
+                    <span className="font-medium truncate max-w-[150px]">{user.empID}</span>
+                </div>
+            )}
+            {user.role !== 'user' && (
+                <div className="flex justify-between border-b border-gray-700/50 pb-1">
+                    <span className="text-gray-400">Company Code:</span>
+                    <span className="font-medium truncate max-w-[150px]">{user.companyCode}</span>
+                </div>
+            )}
+            <div className="flex justify-between border-b border-gray-700/50 pb-1">
+                <span className="text-gray-400">Joining Date:</span>
+                <span className="font-medium">{joiningDate}</span>
+            </div>
+            <div className="flex justify-between border-b border-gray-700/50 pb-1">
+                <span className="text-gray-400">Phone:</span>
+                <span className="font-medium">{user.pNumber}</span>
+            </div>
+            <div className="flex justify-between pb-1">
+                <span className="text-gray-400">Email:</span>
+                <span className="font-medium truncate max-w-[150px]">{user.email}</span>
+            </div>
+            <div className="w-full flex justify-center pt-2">
+                <button onClick={handleChangePassword} className="bg-blue-600 hover:bg-blue-700 transition-all rounded-full w-full py-2 font-medium text-xs shadow">Change Password</button>
+            </div>
+        </div>
+    )
+}
+
+const Notifications = ({ toggleNotification }) => {
+    if (!toggleNotification) return null;
+    let arr = [1, 2, 3, 4, 5, 6, 7, 8];
+
+    return (
+        <div className="absolute right-2 top-16 md:top-20 z-40 bg-gray-800 w-[90%] max-w-xs h-96 rounded-lg p-4 shadow-2xl border border-gray-700 flex flex-col gap-3 text-white">
+            <h3 className="font-bold text-base border-b border-gray-700 pb-2">Notifications</h3>
+            <div className="flex-1 flex flex-col gap-2 overflow-y-auto scrollbar-none">
+                {
+                    arr.map((item, index) => (
+                        <div key={index} className="p-3 bg-gray-900 rounded text-xs border border-gray-700/50 shadow-sm">
+                            <p className="font-semibold text-blue-400">New system notification #{item}</p>
+                            <p className="text-gray-300 mt-1">Your task status was updated successfully.</p>
+                        </div>
+                    ))
+                }
+            </div>
+        </div>
+    )
+}
+
+const ChangePassword = ({ user, toggleChangePassword, setToggleChangePassword }) => {
+    const [password, setPassword] = useState({ oldPassword: "", newPassword: "", confirmPassword: "" });
+    const [close, setClose] = useState(toggleChangePassword);
+
+    useEffect(() => setClose(toggleChangePassword), [toggleChangePassword]);
+
+    const handleClose = () => {
+        setClose(true);
+        setToggleChangePassword(true);
+    }
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        for(let key in password)
-            if(password[key].trim() == "")
-            {
+        for (let key in password) {
+            if (password[key].trim() === "") {
                 toast.warn("Fill all fields.");
                 return;
             }
+        }
         
-        if(user.password !== password.oldPassword)
-          {
-              toast.warn("Wrong Password !")
-              return;
-          }
-        if(password.newPassword === password.confirmPassword)
-          {
-              const res =await fetch("http://localhost:5000/api/changePassword", {
-                         method: "PATCH",
-                         headers: { "Content-Type": "application/json" },
-                         body: JSON.stringify({newPassword : password.newPassword }),
-                         credentials:"include",
-                       });
-                const { success } = await res.json();
-             if(success)
-             {
-                toast.success("Password Changed.");
-                setClose(true)
-                setPassword({oldPassword:"", newPassword:"", confirmPassword:""})
-             }
+        if (user.password && user.password !== password.oldPassword) {
+            toast.warn("Wrong Current Password!");
+            return;
+        }
 
-          }
-        else
-            toast.warn("Somthing is wrong")
-
+        if (password.newPassword === password.confirmPassword) {
+            try {
+                const res = await fetch("http://localhost:5000/api/changePassword", {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ newPassword: password.newPassword }),
+                    credentials: "include",
+                });
+                const data = await res.json();
+                if (data.success) {
+                    toast.success("Password Changed Successfully.");
+                    handleClose();
+                    setPassword({ oldPassword: "", newPassword: "", confirmPassword: "" });
+                } else {
+                    toast.error(data.message || "Failed to change password.");
+                }
+            } catch (error) {
+                toast.error("Network error. Please try again.");
+                console.error(error);
+            }
+        } else {
+            toast.warn("New password and confirm password do not match.");
+        }
     }
 
+    if (close) return null;
+
     return (
-        <>
-          <form className={`${close?"hidden":""} w-[25rem] h-[25rem] rounded-[1rem] p-5 bg-gray-600 absolute top-[7rem] right-[33%] z-10 flex flex-col items-center gap-5`}>
-            <button onClick={handleClose} 
-                    className={`absolute top-3 right-3 bg-gray-700 w-[1.2rem] h-[1.2rem] rounded-[1rem] flex justify-center items-center`}><IoClose/></button>
-            <fieldset className="border-2 w-[80%] h-[4rem] rounded-[7px] flex justify-center">
-                <legend >Current Password</legend>
-                <input className="w-[95%] h-[95%] pl-2 bg-gray-600" 
-                       value={password.oldPassword} onChange={(e)=>setPassword({...password, oldPassword:e.target.value})}
-                       type="password" placeholder="Current Password" minLength={5} required/>
-            </fieldset>
-            <fieldset className="border-2 w-[80%] h-[4rem] rounded-[7px] flex justify-center">
-                <legend >New Password</legend>
-                <input className="w-[95%] h-[95%] pl-2 bg-gray-600"
-                       value={password.newPassword} onChange={(e)=>setPassword({...password, newPassword:e.target.value})} 
-                       type="password" placeholder="New Password" minLength={5} required/>
-            </fieldset>
-            <fieldset className="border-2 w-[80%] h-[4rem] rounded-[7px] flex justify-center">
-                <legend >Confirm Password</legend>
-                <input className="w-[95%] h-[95%] pl-2 bg-gray-600" 
-                       value={password.confirmPassword} onChange={(e)=>setPassword({...password, confirmPassword:e.target.value})}
-                       type="password" placeholder="Confirm Password" minLength={5} required/>
-            </fieldset>
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50 p-4">
+            <form onSubmit={handleSubmit} className="w-full max-w-md rounded-2xl p-6 bg-gray-800 relative flex flex-col gap-4 shadow-2xl border border-gray-700 text-white">
+                <button type="button" onClick={handleClose} className="absolute top-4 right-4 bg-gray-700 w-8 h-8 rounded-full flex justify-center items-center hover:bg-gray-600 transition-all">
+                    <IoClose className="text-lg"/>
+                </button>
+                
+                <h3 className="text-xl font-bold mb-2">Change Password</h3>
 
-            <button onClick={(e)=>handleSubmit(e)} 
-                    type="submit"
-                    className="mt-7 border-2 w-[80%] h-[3rem] rounded-[7px] bg-blue-500 active:text-[0.95rem]">Change Password</button>
+                <div className="flex flex-col gap-1 w-full">
+                    <label className="text-xs text-gray-300 font-medium">Current Password</label>
+                    <input className="w-full h-10 px-3 bg-gray-900 border border-gray-700 rounded-lg text-sm text-white focus:outline-none focus:border-blue-500" 
+                        value={password.oldPassword} onChange={(e) => setPassword({ ...password, oldPassword: e.target.value })}
+                        type="password" placeholder="Enter current password" minLength={5} required/>
+                </div>
 
-          </form>
-        </>
+                <div className="flex flex-col gap-1 w-full">
+                    <label className="text-xs text-gray-300 font-medium">New Password</label>
+                    <input className="w-full h-10 px-3 bg-gray-900 border border-gray-700 rounded-lg text-sm text-white focus:outline-none focus:border-blue-500"
+                        value={password.newPassword} onChange={(e) => setPassword({ ...password, newPassword: e.target.value })} 
+                        type="password" placeholder="Enter new password" minLength={5} required/>
+                </div>
+
+                <div className="flex flex-col gap-1 w-full">
+                    <label className="text-xs text-gray-300 font-medium">Confirm Password</label>
+                    <input className="w-full h-10 px-3 bg-gray-900 border border-gray-700 rounded-lg text-sm text-white focus:outline-none focus:border-blue-500" 
+                        value={password.confirmPassword} onChange={(e) => setPassword({ ...password, confirmPassword: e.target.value })}
+                        type="password" placeholder="Confirm new password" minLength={5} required/>
+                </div>
+
+                <button type="submit" className="mt-4 w-full h-11 rounded-lg bg-blue-600 hover:bg-blue-700 transition-all font-medium text-sm shadow">
+                    Update Password
+                </button>
+            </form>
+        </div>
     )
 }

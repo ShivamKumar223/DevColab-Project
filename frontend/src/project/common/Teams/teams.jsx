@@ -1,112 +1,97 @@
-import {useState } from "react";
-
-import {Navbar} from "../navbar.jsx";
-import {User} from "../user.jsx";
-import {LeftMenu} from "../leftMenu.jsx";
-import { NavLink } from "react-router-dom";
-
+import { useEffect, useState } from "react";
+import { Navbar } from "../navbar.jsx";
+import { User } from "../user.jsx";
+import { LeftMenu } from "../leftMenu.jsx";
 import { TbMessage2Up } from "react-icons/tb";
 import { MdVideoCall } from "react-icons/md";
 
-export const Teams = ()=>{
-
-    
-
-
-
+export const Teams = () => {
     return (
-        <>
-           <Navbar/>
-           <LeftMenu/>
-           <User/>
-           <MainPage/>
-        </>
+        <div className="min-h-screen bg-gray-700 text-white relative overflow-x-hidden">
+            <Navbar />
+            <div className="flex flex-col md:flex-row">
+                <LeftMenu />
+                <div className="w-full md:w-[80%] md:ml-[20%] flex flex-col">
+                    <User />
+                    <MainPage />
+                </div>
+            </div>
+        </div>
     )
 }
 
-
-const MainPage = ()=>{
+const MainPage = () => {
     const [tasks, setTasks] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const temp = async () => {
-                try {
+    useEffect(() => {
+        const temp = async () => {
+            try {
+                const API_URL = import.meta.env.VITE_API_URL;
+                const res = await fetch(`${API_URL}/api/allTask`, {
+                    method: "GET",
+                    credentials: "include"
+                });
+                const fetchedTasks = await res.json();
                 
-                    const API_URL = import.meta.env.VITE_API_URL;
-                    const res = await fetch(`${API_URL}/api/allTask`,{
-                            method:"GET",
-                            credentials:"include"
-                        }
-                    );
-                    const tasks = await res.json();
-                    
-                    // console.log(projectDetails);
-                    // console.log(tasks)
-                    // {name,description,assignTo,startDate,dueDate,}
-                    
-                    if (res.ok ) {
-                        setTasks([...tasks]);
-                        setLoading(false)
-                    }
-                } catch (error) {
-                    console.log("Error to fetching all project or try block in task.jsx", error);
+                if (res.ok) {
+                    setTasks([...fetchedTasks]);
+                    setLoading(false);
                 }
-            };
-            temp();
-                       //Loading
-            if(loading){
-             return <div className="h-screen w-[80%] bg-gray-700  rounded-[1px]
-              absolute  right-0 overflow-auton flex justify-center"> 
-                           <h1 className=" mt-[5rem] text-[2rem]">Loading...</h1>
-                    </div>
+            } catch (error) {
+                console.log("Error fetching all teams/tasks in teams.jsx", error);
             }
-            else
-   
-    return (
-        <div className="h-screen w-[80%] bg-gray-700  rounded-[1px] absolute  right-0 overflow-auto">
-        <div className="p-2 h-[100%] w-[90%] bg-gray-900 rounded-[5px] mx-[3.64rem] my-5 "  >
-           {/* <div className=" h-[5rem] bg-gray-700 p-5 flex items-center sticky top-0"> */}
-            <h1 className="text-[2rem]" ><b> {tasks.length==0?"No any teams":"All Teams"}</b></h1>
-           {/* <NavLink  to="/projectform" className="absolute right-[5rem] "><button className="bg-blue-500 h-8 w-[8rem] rounded-[3px]">+ New Team</button></NavLink> */}
-           {/* </div>   */}
+        };
+        temp();
+    }, []);
 
-     <div className={`grid gap-5  lg:grid-cols-3 md:grid-cols-2 grid-rows-auto auto-rows-[230px]
-                     bg-gray-700 p-4 my-5 h-[90%]
-                     rounded-[2px] text-black overflow-y-scroll  scrollbar-none
-                     transition-all duration-500 ease-linear`}>
-                        
-                        {
-                            tasks.map((currTask) => {
-                               
-                                return <div className="bg-gray-800 rounded-[5px] p-3
-                                shadow-[0px_3px_8px_rgba(0,0,0,0.24)] hover:shadow-2xl overflow-y-scroll scrollbar-none">
-                                  <big className="flex justify-between text-white">
-                                    {currTask.project}_{currTask.taskTitle}
-                                  </big> 
-                                    <div className="min-h-[5px] text-gray-900 break-words p-2 overflow-y-scroll scrollbar-none">
-                                        <p>Total members : {currTask.assignTo.length}</p>
-                                    </div>
-                                    <ul className="w-[100%] h-[5rem]   break-words text-gray-400 overflow-y-scroll scrollbar-none">
-                                        <b className="flex">Members :</b>
-                                        {
-                                            currTask.assignTo.map((person) => {
-                                                return <span className="mx-2 ">{person},</span>
-                                            })
-                                        }
-                                    </ul>
-                              <div className="flex justify-between items-center mt-5 text-[1.7rem]">
-                                 <button> <TbMessage2Up/></button>  <button><MdVideoCall /></button>
-                              </div>
-                                    
+    if (loading) {
+        return (
+            <div className="min-h-screen w-full bg-gray-700 flex justify-center items-center"> 
+                <h1 className="text-xl md:text-[2rem] font-bold">Loading...</h1>
+            </div>
+        )
+    }
+
+    return (
+        <div className="w-full bg-gray-700 min-h-screen p-4 md:p-6 text-white overflow-auto scrollbar-none">
+            <div className="p-4 md:p-6 w-full bg-gray-800 rounded-lg shadow-lg">
+                <h1 className="text-xl md:text-[2rem] font-bold border-b border-gray-700 pb-3 mb-4">
+                    {tasks.length === 0 ? "No teams found" : "All Teams"}
+                </h1>
+
+                <div className="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 bg-gray-700 p-2 md:p-4 rounded-lg shadow scrollbar-none">
+                    {
+                        tasks.map((currTask, ind) => (
+                            <div key={ind} className="bg-gray-800 rounded-lg p-4 shadow-md hover:shadow-2xl transition-all flex flex-col justify-between border border-gray-700 gap-3">
+                                <div>
+                                    <h3 className="flex justify-between items-center text-base md:text-lg font-bold text-white border-b border-gray-700 pb-2">
+                                        <span className="truncate">{currTask.project}</span>
+                                        <span className="text-xs text-blue-400 font-normal">#{currTask.taskTitle}</span>
+                                    </h3> 
+                                    <p className="text-sm text-gray-300 mt-2">Total members: {currTask.assignTo?.length || 0}</p>
                                 </div>
 
-                            })
-                        }
-                    </div>
+                                <div className="bg-gray-900 p-3 rounded-md max-h-24 overflow-y-auto scrollbar-none">
+                                    <p className="text-xs font-semibold text-gray-400 mb-1">Members:</p>
+                                    <div className="flex flex-wrap gap-1 text-xs text-gray-300">
+                                        {
+                                            currTask.assignTo?.map((person, i) => (
+                                                <span key={i} className="bg-gray-800 px-2 py-0.5 rounded">{person}</span>
+                                            ))
+                                        }
+                                    </div>
+                                </div>
 
-
-         </div>
+                                <div className="flex justify-between items-center pt-2 border-t border-gray-700 text-xl">
+                                    <button className="hover:text-blue-400 transition-all p-1" title="Send Message"><TbMessage2Up /></button> 
+                                    <button className="hover:text-green-400 transition-all p-1" title="Start Video Call"><MdVideoCall /></button>
+                                </div>
+                            </div>
+                        ))
+                    }
+                </div>
+            </div>
         </div>
-        
     )
 }

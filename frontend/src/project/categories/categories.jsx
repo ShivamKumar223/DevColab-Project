@@ -1,66 +1,62 @@
 import { Slider } from "../common/Slider";
 import { useState } from "react";
-import { IoReorderThreeOutline, } from "react-icons/io5";
+import { IoReorderThreeOutline } from "react-icons/io5";
 import { NavLink } from "react-router-dom";
 
-export const Categories = ()=>{
-    const handleClick = (role)=>{
-        localStorage.setItem("role",role);
+export const Categories = () => {
+    const handleClick = (role) => {
+        localStorage.setItem("role", role);
     }
 
     const [hide, setHide] = useState(true);
-    
-        const toggleSlider = () =>{
-    
-            setHide(!hide);
-        }
 
-    return <div className="h-screen w-screen  bg-green-700 flex flex-col justify-between">
+    const toggleSlider = () => {
+        setHide(!hide);
+    }
 
-           <Slider hide={hide}/>                         
+    return (
+        <div className="min-h-screen w-full bg-green-700 flex flex-col justify-between text-white">
+            <Slider hide={hide}/>                        
 
-        <header className="flex items-center justify-center">
-            <nav className='flex justify-between h-20 items-center border-b-2 w-[90vw] ' >
-                <button onClick={toggleSlider} className="m-10 font-light text-black flex items-center justify-center bg-white h-10 w-10 rounded-[5rem] "> <IoReorderThreeOutline /> </button>
-             <img className="h-[10rem] relative left-[5rem]" src="/DevColab-logo-transparent.png" alt="" />
-                <div className="w-[18rem] h-12 flex justify-between items-center">
-                    {/* <button className="mx-10 rounded-[50px] text-white"> <IoMoonSharp /> </button> */}
-                    <button className="mr-10  h-10 w-20 text-white text-[1.3rem] hover:text-[1.2rem] hover:underline"><NavLink to="/">Home</NavLink></button>
+            <header className="flex items-center justify-center p-4">
+                <nav className='flex justify-between h-20 items-center border-b-2 border-white/20 w-full max-w-6xl px-4' >
+                    <button onClick={toggleSlider} className="font-light text-black flex items-center justify-center bg-white h-10 w-10 rounded-full shadow"> 
+                        <IoReorderThreeOutline className="text-2xl" /> 
+                    </button>
+                    <img className="h-16 md:h-24 object-contain" src="/DevColab-logo-transparent.png" alt="DevColab Logo" />
+                    <div className="flex gap-2 sm:gap-4 items-center">
+                        <NavLink to="/" className="text-white text-base md:text-lg hover:underline">Home</NavLink>
+                        <NavLink to="/" className="text-white text-base md:text-lg hover:underline">Back</NavLink>
+                    </div>
+                </nav>
+            </header>
 
-                    <button className="mx-10 h-11 w-[7rem] text-[1.2rem] hover:text-[1.1rem] text-white  rounded-[3px] hover:underline "><NavLink to="/">Back</NavLink></button>
+            <main className="flex-1 flex flex-col items-center justify-center p-6 gap-8">
+                <h1 className="text-2xl md:text-4xl font-bold text-center">Choose Your Role</h1>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 w-full max-w-5xl justify-items-center">
+                    <NavLink onClick={() => handleClick("Admin")} to="/login" className="w-full max-w-[18rem]">
+                        <div className="bg-green-800 p-6 flex flex-col items-center gap-4 rounded-[1rem] shadow-lg hover:shadow-2xl hover:scale-105 transition-all border border-green-600">
+                           <img className="h-40 w-auto object-contain" src="./admin.png" alt="Admin" />
+                           <b className="text-xl">Admin</b>
+                        </div>
+                    </NavLink>
+
+                    <NavLink onClick={() => handleClick("Mentor")} to="/login" className="w-full max-w-[18rem]">
+                        <div className="bg-green-800 p-6 flex flex-col items-center gap-4 rounded-[1rem] shadow-lg hover:shadow-2xl hover:scale-105 transition-all border border-green-600">
+                           <img className="h-40 w-auto object-contain" src="./mentor.png" alt="Mentor" />
+                           <b className="text-xl">Mentor</b>
+                        </div>
+                    </NavLink>
+
+                    <NavLink onClick={() => handleClick("Employee")} to="/login" className="w-full max-w-[18rem]">
+                        <div className="bg-green-800 p-6 flex flex-col items-center gap-4 rounded-[1rem] shadow-lg hover:shadow-2xl hover:scale-105 transition-all border border-green-600">
+                           <img className="h-40 w-auto object-contain" src="./employee.png" alt="Employee" />
+                           <b className="text-xl">Employee</b>
+                        </div>
+                    </NavLink>
                 </div>
-            </nav>
-        </header>
-
-<div>
-        <h1 className="flex justify-center text-[2rem] font-[Sans-serif] ">Choose Your Role</h1>
-
-       <div className="flex justify-evenly items-center w-screen h-[30rem] bg-green-700 ">
-            <NavLink onClick={()=>handleClick("Admin")} to="/login">
-                <div className="bg-green-700 h-[20rem] w-[20rem] flex flex-col items-center gap-[2rem] rounded-[1rem] shadow-[0px_3px_8px_rgba(0,0,0,0.24)] hover:shadow-2xl">
-                   <img className="h-[70%] w-[90%]" src="./admin.png" alt="" />
-                   <b>Admin</b>
-                </div>
-            </NavLink>
-            <NavLink onClick={()=>handleClick("Mentor")} to="/login">
-                <div className="bg-green-700 h-[20rem] w-[20rem] flex flex-col items-center gap-[2rem] rounded-[1rem] shadow-[0px_3px_8px_rgba(0,0,0,0.24)] hover:shadow-2xl">
-                 <img className="h-[70%] " src="./mentor.png" alt="" />
-                 <b>Mentor</b>
-                </div>
-            </NavLink>
-            <NavLink onClick={()=>handleClick("Employee")} to="/login">
-                <div className="bg-green-700 h-[20rem] w-[20rem] flex flex-col items-center gap-[2rem] rounded-[1rem] shadow-[0px_3px_8px_rgba(0,0,0,0.24)] hover:shadow-2xl">
-                  <img className="h-[70%] w-[60%]" src="./employee.png" alt="" />
-                  <b>Employee</b>
-                </div>
-            </NavLink>
-            {/* <NavLink onClick={()=>handleClick("user")} to="/login">
-                <div className="bg-green-700 h-[20rem] w-[20rem] flex flex-col items-center gap-[2rem] rounded-[1rem] shadow-[0px_3px_8px_rgba(0,0,0,0.24)] hover:shadow-2xl">
-                 <img className="h-[70%] " src="./user.png" alt="" />
-                 <b>Normal user</b>
-                </div>
-            </NavLink> */}
-       </div>
-    </div>
-    </div>
+            </main>
+        </div>
+    );
 }

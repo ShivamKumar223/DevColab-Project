@@ -9,17 +9,14 @@ export const File = ({ hide, openFile }) => {
     JSON.parse(Cookies.get("currentTask"))
   );
 
-  const projectId = currentTask.project; // <-- Project ID
-// console.log("vvb",projectId)
+  const projectId = currentTask.project;
   const [tree, setTree] = useState(null);
 
-  // ---------------- Load Tree From Backend ----------------
   useEffect(() => {
     const loadTree = async () => {
       try {
         const API_URL = import.meta.env.VITE_API_URL;
-        const res = await fetch(`${API_URL}/api/project/${projectId}`
-        );
+        const res = await fetch(`${API_URL}/api/project/${projectId}`);
         const data = await res.json();
         setTree(data);
       } catch (err) {
@@ -30,12 +27,10 @@ export const File = ({ hide, openFile }) => {
     loadTree();
   }, [projectId]);
 
-  // ---------------- Save Tree To Backend ----------------
   const saveTree = async (updatedTree) => {
     setTree(updatedTree);
-
     const API_URL = import.meta.env.VITE_API_URL;
-    const res = await fetch(`${API_URL}/api/project/update`, {
+    await fetch(`${API_URL}/api/project/update`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -52,29 +47,26 @@ export const File = ({ hide, openFile }) => {
       </div>
     );
 
-  // ---------------- Add Folder ----------------
- const addFolder = () => {
-  const name = prompt("Folder name:");
-  if (!name) return;
+  const addFolder = () => {
+    const name = prompt("Folder name:");
+    if (!name) return;
 
-  const newTree = {
-    ...tree,
-    children: [
-      ...(tree.children || []),
-      {
-        id: crypto.randomUUID(),
-        type: "folder",
-        name,
-        children: [],
-      },
-    ],
+    const newTree = {
+      ...tree,
+      children: [
+        ...(tree.children || []),
+        {
+          id: crypto.randomUUID(),
+          type: "folder",
+          name,
+          children: [],
+        },
+      ],
+    };
+
+    saveTree(newTree);
   };
 
-  saveTree(newTree);
-};
-
-
-  // ---------------- Add File ----------------
   const addFile = () => {
     const name = prompt("File name:");
     if (!name) return;
@@ -96,28 +88,23 @@ export const File = ({ hide, openFile }) => {
   };
 
   return (
-    <div
-      className={`${
-        hide ? "hidden" : ""
-      } absolute top-[4.1rem] z-10 bg-gray-700 h-[91%] w-[20%] border`}
-    >
-      {/* Top Bar */}
-      <div className="bg-gray-800 h-[3.5rem] border flex justify-evenly items-center text-white">
-        <p className="w-[60%] h-[3rem] flex justify-center items-center overflow-x-scroll scrollbar-none">
+    <div className={`${hide ? "hidden" : "block"} absolute top-14 left-0 z-20 bg-gray-800 text-white h-[calc(100vh-3.5rem)] w-full sm:w-64 border-r border-gray-700 shadow-xl`}>
+      <div className="bg-gray-900 h-14 p-2 border-b border-gray-700 flex justify-between items-center px-4">
+        <p className="truncate text-sm font-medium max-w-[10rem]">
           {currentTask.project}@{currentTask.taskTitle}
         </p>
 
-        <button className="text-xl" onClick={addFolder}>
-          <MdCreateNewFolder />
-        </button>
-
-        <button className="text-xl" onClick={addFile}>
-          <FaFileCirclePlus />
-        </button>
+        <div className="flex gap-2">
+          <button className="text-lg hover:text-green-400" onClick={addFolder}>
+            <MdCreateNewFolder />
+          </button>
+          <button className="text-lg hover:text-blue-400" onClick={addFile}>
+            <FaFileCirclePlus />
+          </button>
+        </div>
       </div>
 
-      {/* Tree Section */}
-      <div className="p-2 overflow-y-auto h-full text-white">
+      <div className="p-3 overflow-y-auto h-[calc(100%-3.5rem)] text-sm">
         <Tree node={tree} openFile={openFile} saveTree={saveTree} />
       </div>
     </div>

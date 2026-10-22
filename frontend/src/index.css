@@ -4,18 +4,16 @@
 
 @layer utilities {
   .scrollbar-none::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Edge */
+    display: none;
   }
   .scrollbar-none {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;     /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }
 
-
-#root{
-   height: 100vh;
-   
-   
-   color:white;
+#root {
+   min-height: 100vh;
+   color: white;
+   background-color: #374151;
 }

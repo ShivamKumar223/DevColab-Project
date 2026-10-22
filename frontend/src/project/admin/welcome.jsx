@@ -1,44 +1,45 @@
+import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { useEffect } from "react";
-import { useState } from "react";
 
+export const Welcome = () => {
+    const [userName, setUserName] = useState("Developer");
 
-
-export const Welcome = ()=>{
-  const [userName, setUserName]=useState("");
- useEffect(()=>{
-  const welcome = async ()=>{
-    try{
-    const API_URL = import.meta.env.VITE_API_URL;
-    const res = await fetch(`${API_URL}/api/welcome`,{
-      method:"GET",
-      credentials:"include",
-    });
-    const {name} = await res.json();
-     setUserName(name);
-    // console.log(name);
-    }
-    catch(error){
-      console.log("Data fetching error for welcome : ",error);
-    }
-     
-  }
-  welcome();
- },[])
-
+    useEffect(() => {
+        const welcome = async () => {
+            try {
+                const API_URL = import.meta.env.VITE_API_URL;
+                const res = await fetch(`${API_URL}/api/welcome`, {
+                    method: "GET",
+                    credentials: "include",
+                });
+                const data = await res.json();
+                if (data && data.name) {
+                    setUserName(data.name);
+                }
+            } catch (error) {
+                console.log("Data fetching error for welcome : ", error);
+            }
+        };
+        welcome();
+    }, []);
 
     return (
-     
-       <div className="px-9 h-[30%] w-[80%] bg-gray-700 absolute top-[5rem] right-0 ">
-         <div className="p-5 h-[90%] w-[100%] bg-gray-800  my-2 rounded-[5px] ">
-          <h1 className=" text-[2rem] text-green-500">Welcome {userName} 😃 !</h1>
-          <p>You have 4 active project and 3 due today</p>
-          <NavLink to="/admin/candidateform">
-          <button className="bg-blue-500 w-[10rem] h-9 mt-7 rounded-[2px] hover:text-[0.98rem] " title="click to create new project">
-            + new candidate
-            </button></NavLink>
-          </div>
-          
-       </div>
-    )
-}
+        <div className="w-full bg-gray-700 p-4 md:p-6 text-white">
+            <div className="p-6 md:p-8 w-full bg-gray-800 rounded-lg shadow-lg flex flex-col gap-4 border border-gray-700">
+                <h1 className="text-xl md:text-3xl font-bold text-green-400 flex items-center gap-2">
+                    Welcome {userName} 😃!
+                </h1>
+                <p className="text-sm md:text-base text-gray-300">
+                    You have 4 active projects and 3 due today.
+                </p>
+                <div>
+                    <NavLink to="/admin/candidateform">
+                        <button className="bg-blue-600 hover:bg-blue-700 transition-all w-full sm:w-44 h-11 rounded-lg text-sm font-medium shadow flex justify-center items-center" title="Click to create new candidate/project">
+                            + New Candidate
+                        </button>
+                    </NavLink>
+                </div>
+            </div>
+        </div>
+    );
+};

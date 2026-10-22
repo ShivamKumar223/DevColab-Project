@@ -1,146 +1,114 @@
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { IoReorderThreeOutline, } from "react-icons/io5";
-// import Cookies from "js-cookie"; You can use this after login because now cookies is not seted.
+import { IoReorderThreeOutline } from "react-icons/io5";
 import { toast } from "react-toastify";
 import { Slider } from "./common/Slider";
 
-
-export const LoginPage = ()=>{
-
+export const LoginPage = () => {
   const navigate = useNavigate();
- 
-   const [role, setRole] = useState(()=>localStorage.getItem("role"))  
-  // console.log("Role :",role)
-  const [loginData, setLoginData] = useState({role:role, companyCode:"", email:"",empID:"", password:""});
+  const [role, setRole] = useState(() => localStorage.getItem("role"));
+  const [loginData, setLoginData] = useState({ role: role, companyCode: "", email: "", empID: "", password: "" });
   const [hide, setHide] = useState(true);
 
-    const toggleSlider = () =>{
+  const toggleSlider = () => setHide(!hide);
 
-        setHide(!hide);
-    }
-
-  const handleSubmit = async (e)=>{
+  const handleSubmit = async (e) => {
     e.preventDefault();
-  
-    
-      const API_URL = import.meta.env.VITE_API_URL;
+    const API_URL = import.meta.env.VITE_API_URL;
     const res = await fetch(`${API_URL}/api/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(loginData),
-      credentials:"include",
+      credentials: "include",
     });
-      const {authenticate, message} = await res.json();
-      // console.log(authenticate);
-    if(res.ok && authenticate)
-    {
-      // localStorage.setItem("email",`${loginData.email}`);
-      // localStorage.setItem("companyCode",`${loginData.companyCode}`);
-      // localStorage.setItem("empID",`${loginData.empID}`);
+    const { authenticate, message } = await res.json();
 
+    if (res.ok && authenticate) {
       toast.success(`${message}`);
-      if(role == "Admin")
-        navigate("/admin/dashboard")
-      else
-      navigate("/dashboard");
-
+      if (role === "Admin") navigate("/admin/dashboard");
+      else navigate("/dashboard");
+    } else {
+      toast.error(message);
+      setLoginData({ ...loginData, password: "" });
     }
-    else 
-         {
-           toast.error(message);
-           setLoginData({...loginData, password:""});
-         }
-
-    // console.log(loginData)
   }
 
-    return <div className="h-screen width-screen flex flex-col justify-between items-center bg-green-800 ">
-        <Slider hide={hide}/>
-        <header className="flex items-center justify-center">
-            <nav className='flex justify-between h-20 items-center border-b-2 w-[90vw] ' >
-                <button onClick={toggleSlider} className="m-10 font-light text-black flex items-center justify-center bg-white h-10 w-10 rounded-[5rem] "> <IoReorderThreeOutline /> </button>
-             <img className="h-[10rem] relative left-[5rem]" src="/DevColab-logo-transparent.png" alt="" />
-                <div className="w-[18rem] h-12 flex justify-between items-center">
-                    {/* <button className="mx-10 rounded-[50px] text-white"> <IoMoonSharp /> </button> */}
-                    <button className="mr-10  h-10 w-20 text-white text-[1.3rem] hover:text-[1.2rem] hover:underline"><NavLink to="/">Home</NavLink></button>
-
-                    <button className="mx-10 h-11 w-[7rem] text-[1.2rem] hover:text-[1.1rem] text-white  rounded-[3px] hover:underline "><NavLink to="/">Back</NavLink></button>
-                </div>
-            </nav>
-        </header>
-
-
-       {/* <div className="text-[2.2rem] bg-blue-600 flex items-center gap-5 justify-center w-[20%] h-10 rounded-[5px]">
-                <NavLink to="/dashboard" ><img className="h-[10rem] "  src="/DevColab-logo-transparent.png" alt="" /></NavLink>
-            </div> */}
-      <div className=" w-screen h-[85%] flex flex-col justify-evenly items-center">
-           <h1 className="text-[2rem]">Log-in To Enter Your Log</h1>
-
-        <div className="bg-green-700 h-[70%] w-[45rem] flex rounded-[1rem]">
+  return (
+    <div className="min-h-screen w-full flex flex-col justify-between items-center bg-green-800 text-white">
+      <Slider hide={hide} />
       
-            <div className="flex justify-center items-center w-[50%] h-[100%] border-r-[1px]">
-               <img src="./loginPic/login1.png" alt="" />
-            </div>
+      <header className="flex items-center justify-center p-4 w-full">
+        <nav className='flex justify-between h-16 md:h-20 items-center border-b border-white/20 w-full max-w-6xl px-4'>
+          <button onClick={toggleSlider} className="font-light text-black flex items-center justify-center bg-white h-10 w-10 rounded-full shadow"> 
+            <IoReorderThreeOutline className="text-xl"/> 
+          </button>
+          <img className="h-14 md:h-20 object-contain" src="/DevColab-logo-transparent.png" alt="Logo" />
+          <div className="flex gap-4">
+            <NavLink to="/" className="text-white hover:underline text-sm md:text-base">Home</NavLink>
+            <NavLink to="/" className="text-white hover:underline text-sm md:text-base">Back</NavLink>
+          </div>
+        </nav>
+      </header>
 
-    <div className="w-[50%] h-[100%] flex justify-center items-center">
-      <form onSubmit={handleSubmit} className="w-[90%] h-[100%] flex flex-col items-center justify-center " action="">
+      <div className="w-full flex-1 flex flex-col justify-center items-center">
+        <p className="text-2xl md:text-3xl font-bold mb-2 text-center">Log-in</p>
 
-        <div className="mt-5 w-[80%] flex flex-col justify-evenly text-black">
-          <label htmlFor="role">Role :</label>
-          <input value={role} readOnly
-          className="h-[2rem] p-4 w-[100%] bg-green-800 rounded-[2rem]"
-           type="text" id="role" placeholder="Enter your role" required /> 
+        <div>
+          <b>Demo: </b>
+          <p>Email: <i className=" underline " >demo@email.com,</i></p>
+          
+          <p>Company code: <i className=" underline " >demo123, </i></p>
+          
+          <p>Password: <i className=" underline " >demo@123</i></p>
+          
         </div>
 
-          <div  className={`${role=="user"?"hidden":"flex"} mt-5 w-[80%] flex-col justify-evenly `}>
-              <label className="text-black" htmlFor="cID">Company code :</label>
-              <input value={loginData.companyCode} 
-              onChange={(e)=>setLoginData({...loginData,companyCode:e.target.value})}
-                 className="h-[2rem] p-4 w-[100%] bg-green-800 rounded-[2rem]"
-                type="text" id="cID" placeholder="Enter company code" /> 
+        <div className="bg-green-700 w-full max-w-4xl flex flex-col md:flex-row rounded-xl shadow-2xl overflow-hidden border border-green-600">
+          <div className="hidden md:flex justify-center items-center w-1/2 p-6 border-r border-green-600/30">
+            <img src="./loginPic/login1.png" alt="Login Graphic" className="max-h-80 object-contain" />
           </div>
 
-        <div  className={`${role=="user" || role== "Admin"?"flex justify-center ":"hidden"} mt-5 w-[80%] flex flex-col justify-evenly `}>
-          <label className="text-black" htmlFor="email">Email :</label>
-        <input value={loginData.email} 
-        onChange={(e)=>setLoginData({...loginData,email:e.target.value})} 
-        className="h-[2rem] p-4 w-[100%] bg-green-800 rounded-[2rem]" 
-        type="email" id="email" placeholder="Enter email"/>
-        </div>
+          <div className="w-full md:w-1/2 p-6 flex justify-center items-center">
+            <form onSubmit={handleSubmit} className="w-full flex flex-col items-center gap-4">
+              <div className="w-full">
+                <label htmlFor="role" className="text-xs font-semibold text-black mb-1 block">Role :</label>
+                <input value={role || ""} readOnly className="h-10 px-4 w-full bg-green-800 rounded-full text-white text-sm" type="text" id="role" required /> 
+              </div>
 
-        <div  className={ `${role=="user" || role== "Admin"?"hidden":"flex justify-center "}  mt-5 w-[80%] flex flex-col justify-evenly `}>
-          <label className="text-black" htmlFor="empID">Employee ID :</label>
-        <input value={loginData.empID} 
-        onChange={(e)=>setLoginData({...loginData,empID:e.target.value})} 
-        className="h-[2rem] p-4 w-[100%] bg-green-800 rounded-[2rem]" 
-        type="text" id="empID"  placeholder="Enter employee id"/>
-        </div>
-       
-        
-        <div className={`mt-5 w-[80%] flex flex-col justify-evenly `}>
-        <label className="text-black" htmlFor="pass">Password :</label>
-        <input 
-        value={loginData.password} 
-        onChange={(e)=>setLoginData({...loginData, password:e.target.value})} 
-        className="h-[2rem] p-4 w-[100%] bg-green-800 rounded-[2rem]"
-        type="password" id="pass" required minLength="5" placeholder="Enter password"/>
-        </div>
-         <div className=" w-[80%] h-[1.5rem] flex flex-row-reverse items-center">
-          <NavLink to="/forgetPassword" className=" text-[0.7rem] text-right  hover:underline hover:text-blue-500" href="">forget password</NavLink></div>
-       
-       <div className="w-[80%] my-[2rem]">
-        <button className="h-[2rem]  w-[100%] bg-blue-700 rounded-[2rem] hover:text-[0.9rem]" type="subint">Log in</button>
+              <div className={`${role === "user" ? "hidden" : "block"} w-full`}>
+                <label className="text-xs font-semibold text-black mb-1 block" htmlFor="cID">Company Code :</label>
+                <input value={loginData.companyCode} onChange={(e) => setLoginData({ ...loginData, companyCode: e.target.value })} className="h-10 px-4 w-full bg-green-800 rounded-full text-white text-sm" type="text" id="cID" placeholder="Enter company code" /> 
+              </div>
 
-           <div className={`${role=="user" || role== "Admin"?"flex justify-center ":"hidden"} text-[0.8rem] w-[100%]`}> 
-            <p>Don't have an account?</p>
-            <NavLink to="/signup" className="hover:underline hover:text-blue-500" >Register</NavLink>
-           </div>
-        </div>
-      </form>
-    </div>
+              <div className={`${role === "user" || role === "Admin" ? "block" : "hidden"} w-full`}>
+                <label className="text-xs font-semibold text-black mb-1 block" htmlFor="email">Email :</label>
+                <input value={loginData.email} onChange={(e) => setLoginData({ ...loginData, email: e.target.value })} className="h-10 px-4 w-full bg-green-800 rounded-full text-white text-sm" type="email" id="email" placeholder="Enter email"/>
+              </div>
 
+              <div className={`${role === "user" || role === "Admin" ? "hidden" : "block"} w-full`}>
+                <label className="text-xs font-semibold text-black mb-1 block" htmlFor="empID">Employee ID :</label>
+                <input value={loginData.empID} onChange={(e) => setLoginData({ ...loginData, empID: e.target.value })} className="h-10 px-4 w-full bg-green-800 rounded-full text-white text-sm" type="text" id="empID" placeholder="Enter employee id"/>
+              </div>
+
+              <div className="w-full">
+                <label className="text-xs font-semibold text-black mb-1 block" htmlFor="pass">Password :</label>
+                <input value={loginData.password} onChange={(e) => setLoginData({ ...loginData, password: e.target.value })} className="h-10 px-4 w-full bg-green-800 rounded-full text-white text-sm" type="password" id="pass" required minLength="5" placeholder="Enter password"/>
+              </div>
+
+              <div className="w-full text-right">
+                <NavLink to="/forgetPassword" className="text-xs hover:underline text-blue-200">Forget password?</NavLink>
+              </div>
+
+              <button className="h-11 w-full bg-blue-700 hover:bg-blue-800 rounded-full font-medium transition-all shadow mt-2" type="submit">Log in</button>
+
+              <div className={`${role === "user" || role === "Admin" ? "flex" : "hidden"} justify-center gap-1 text-xs mt-2`}> 
+                <p>Don't have an account?</p>
+                <NavLink to="/signup" className="hover:underline text-blue-200 font-semibold">Register</NavLink>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
-    </div>
+  )
 }

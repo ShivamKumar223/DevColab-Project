@@ -32,24 +32,25 @@ const Tree = ({ node, openFile = () => {}, saveTree }) => {
   };
 
   return (
-    <div className="ml-3">
+    <div className="ml-2 my-1">
       <div
-        className="cursor-pointer text-white flex gap-2 items-center"
+        className="cursor-pointer text-gray-200 hover:text-white flex gap-2 items-center text-sm py-1"
         onClick={() => {
           if (node.type === "folder") setExpand(!expand);
-          else openFile(node); // ALWAYS safe
+          else openFile(node);
         }}
       >
-        {node.type === "folder" ? "📁" : "📄"} {node.name}
+        <span>{node.type === "folder" ? "📁" : "📄"}</span>
+        <span className="truncate">{node.name}</span>
       </div>
 
       {expand && node.type === "folder" && (
-        <div className="ml-4">
+        <div className="ml-4 border-l border-gray-700 pl-2">
           <div className="flex gap-2 my-1">
-            <button onClick={handleAddFile} className="text-xs text-green-400">
+            <button onClick={handleAddFile} className="text-xs text-green-400 hover:underline">
               + File
             </button>
-            <button onClick={handleAddFolder} className="text-xs text-blue-400">
+            <button onClick={handleAddFolder} className="text-xs text-blue-400 hover:underline">
               + Folder
             </button>
           </div>
