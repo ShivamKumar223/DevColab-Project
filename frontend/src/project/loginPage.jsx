@@ -55,11 +55,10 @@ export const LoginPage = () => {
 
         <div>
           <b>Demo: </b>
-          <p>Email: <i className=" underline " >demo@email.com,</i></p>
-          
           <p>Company code: <i className=" underline " >demo123, </i></p>
-          
+          <p>Email: <i className=" underline " >demo@email.com,</i></p>
           <p>Password: <i className=" underline " >demo@123</i></p>
+          <p>Access Level: Admin (Required to create candidates and access other role features)</p>
           
         </div>
 
