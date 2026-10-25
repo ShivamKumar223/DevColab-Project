@@ -23,7 +23,7 @@ export const Categories = () => {
                     <button onClick={toggleSlider} className="font-light text-black flex items-center justify-center bg-white h-10 w-10 rounded-full shadow"> 
                         <IoReorderThreeOutline className="text-2xl" /> 
                     </button>
-                    <img className="h-16 md:h-24 object-contain" src="/DevColab-logo-transparent.png" alt="DevColab Logo" />
+                    <img className="h-[10rem] object-contain" src="/DevColab-logo-transparent.png" alt="DevColab Logo" />
                     <div className="flex gap-2 sm:gap-4 items-center">
                         <NavLink to="/" className="text-white text-base md:text-lg hover:underline">Home</NavLink>
                         <NavLink to="/" className="text-white text-base md:text-lg hover:underline">Back</NavLink>

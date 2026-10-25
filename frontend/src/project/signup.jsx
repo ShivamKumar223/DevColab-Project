@@ -47,7 +47,7 @@ export const SignupPage = () => {
                     <button onClick={toggleSlider} className="font-light text-black flex items-center justify-center bg-white h-10 w-10 rounded-full shadow"> 
                         <IoReorderThreeOutline className="text-xl"/> 
                     </button>
-                    <img className="h-14 md:h-20 object-contain" src="/DevColab-logo-transparent.png" alt="Logo" />
+                    <img className="h-[10rem] object-contain" src="/DevColab-logo-transparent.png" alt="Logo" />
                     <div className="flex gap-4">
                         <NavLink to="/" className="text-white hover:underline text-sm md:text-base">Home</NavLink>
                         <NavLink to="/" className="text-white hover:underline text-sm md:text-base">Back</NavLink>

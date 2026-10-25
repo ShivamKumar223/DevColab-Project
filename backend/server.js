@@ -15,8 +15,9 @@ import connectDB from "./config/db.js";
 dotenv.config();
 connectDB();     //MongoDB atlas connection
 
-// const app = express();
-// const server = http.createServer(app);
+const app = express();
+const server = http.createServer(app);
+
 // const io = new Server(server,{
 //     cors:{
 //         origin:"http://localhost:5173",
@@ -24,6 +25,7 @@ connectDB();     //MongoDB atlas connection
 //         credentials: true,
 //     }
 // });
+
 const io = new Server(server,{
     cors:{
         origin:"https://devcolab.netlify.app",
@@ -39,6 +41,7 @@ const io = new Server(server,{
 //     credentials: true,
 //   })
 // );
+
 app.use(
   cors({
     origin: "https://devcolab.netlify.app",
