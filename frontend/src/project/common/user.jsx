@@ -24,7 +24,7 @@ export const User = () => {
     }, []);
 
     return (
-        <div className="w-full md:w-[20%] md:fixed md:bottom-0 flex items-center justify-between p-3 bg-gray-900 border-t border-gray-800 text-white z-20 shadow-md">
+        <div className="w-full md:w-[20%] md:fixed md:bottom-0 flex items-center justify-between p-3 bg-gray-900 border-t border-gray-800 text-white z-20 lg:left-0 shadow-md">
             <div className="flex items-center gap-3 overflow-hidden">
                 <div className="h-9 w-9 flex-shrink-0 rounded-full overflow-hidden border border-blue-500 shadow">
                     <img className="w-full h-full object-cover" src="/shivam.png" alt="User" />

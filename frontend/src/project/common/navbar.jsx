@@ -45,7 +45,7 @@ export const Navbar = () => {
             {/* Logo Section */}
             <div className="flex items-center">
                 <NavLink to="/dashboard" className="flex items-center">
-                    <img className="lg:h-[10rem] md:h-16 object-contain" src="/DevColab-logo-transparent.png" alt="Logo" />
+                    <img className="h-[10rem] object-contain" src="/DevColab-logo-transparent.png" alt="Logo" />
                 </NavLink>
             </div> 
 

@@ -76,7 +76,7 @@ export const Form = () => {
 
     return (
        <div className="min-h-screen w-full md:w-[80%] absolute top-20 md:top-0 right-0 bg-gray-700 flex justify-center items-center p-4 text-white">
-            <form onSubmit={(e) => handleSubmit(e)} className="w-full max-w-xl bg-gray-800 flex flex-col items-center justify-center gap-4 p-6 md:p-8 rounded-[2rem] shadow-xl my-6">
+            <form onSubmit={(e) => handleSubmit(e)} className="w-full max-w-xl bg-gray-800 flex flex-col items-center justify-center gap-4 p-6 md:p-8 rounded-[2rem] shadow-xl my-6 ">
                 <h2 className="text-xl font-bold mb-2">Create Candidate / User</h2>
                 
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center w-full gap-1 sm:gap-4">

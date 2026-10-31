@@ -7,7 +7,7 @@ import { NavLink } from "react-router-dom";
 
 export const AdminMenu = () => {
     return (
-        <div className="w-full md:w-[20%] md:h-screen bg-gray-800 flex flex-col md:absolute left-0 top-0 z-10 p-4 md:p-0 shadow-md text-white">
+        <div className="min-h-full w-full md:w-[20%] md:h-screen bg-gray-800 flex flex-col md:absolute left-0 top-0 z-10 p-4 md:p-0 shadow-md text-white">
             <div className="w-full flex flex-col gap-2 md:mt-20">
                <NavLink to="/admin/dashboard" className="hover:bg-gray-700 flex items-center gap-3 px-4 py-3 rounded-md transition-all text-sm md:text-base"><IoMdHome className="text-lg"/>Home</NavLink>
                <NavLink to="/admin/dashboard/admins" className="hover:bg-gray-700 flex items-center gap-3 px-4 py-3 rounded-md transition-all text-sm md:text-base"><RiAdminFill className="text-lg"/>Admins</NavLink>
