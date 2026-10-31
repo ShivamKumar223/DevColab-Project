@@ -8,11 +8,21 @@ import { PiDotsThreeOutlineVerticalBold } from "react-icons/pi";
 import { IoIosShareAlt } from "react-icons/io";
 
 export function CodeEditor() {
-  const [user, setUser] = useState(() => JSON.parse(Cookies.get("DevColab")));
+  const [user, setUser] = useState(() => {
+    try {
+      const cookie = Cookies.get("DevColab");
+      return cookie ? JSON.parse(cookie) : { empID: "", role: "", name: "" };
+    } catch { return { empID: "", role: "", name: "" }; }
+  });
   const [code, setCode] = useState("// Write JavaScript code here 👇\n");
   const [output, setOutput] = useState("");
   const [error, setError] = useState('');
-  const [currentTask, setCurrentTask] = useState(() => JSON.parse(Cookies.get("currentTask")));
+  const [currentTask, setCurrentTask] = useState(() => {
+    try {
+      const cookie = Cookies.get("currentTask");
+      return cookie ? JSON.parse(cookie) : { status: "pending", assignTo: [], project: "", taskTitle: "" };
+    } catch { return { status: "pending", assignTo: [], project: "", taskTitle: "" }; }
+  });
   const [hidden, setHidden] = useState(true);
   const [socket, setSocket] = useState(null);
   const [selectedStatus, setSelectedStatus] = useState(() => currentTask.status);

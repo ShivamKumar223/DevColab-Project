@@ -19,6 +19,19 @@ const userSchema = new mongoose.Schema(
 // model creation
 export const Users = mongoose.model("user", userSchema);
 
+// Make sure indexes (like unique) are applied
+// await Users.init();
+
+// Safe cookie parser helper
+const parseCookie = (cookieStr) => {
+    try {
+        if (!cookieStr) return null;
+        return JSON.parse(cookieStr);
+    } catch {
+        return null;
+    }
+};
+
 
 //To handle user sign up
 export const createNewUser = async (req, res) => {
@@ -49,7 +62,7 @@ export const createNewUser = async (req, res) => {
 // To handle user login or verify user authentication
 export const verifyUser = async (req, res) => {
     let { role, companyCode, empID, email, password } = req.body;
-    email = email.trim();
+    email = email ? email.trim() : "";
     // console.log(email);
     if (role == "Admin")
         var user = await Users.findOne({
@@ -97,7 +110,8 @@ export const verifyUser = async (req, res) => {
 
 // to welcome on dashboard page
 export const welcome = async (req, res) => {
-    const userDetails = JSON.parse(req.cookies.DevColab);
+    const userDetails = parseCookie(req.cookies.DevColab);
+    if (!userDetails) return res.status(401).json(null);
 
     if (userDetails?.role != "user" || userDetails?.role != "Admin")
         var user = await Users.findOne({ email: userDetails?.email })
@@ -114,9 +128,8 @@ export const welcome = async (req, res) => {
 
 // show all users on admin dashboard
 export const getAllUsers = async (req, res) => {
-
-    const userDetails = JSON.parse(req.cookies.DevColab);
-    //   console.log(userDetails)
+    const userDetails = parseCookie(req.cookies.DevColab);
+    if (!userDetails) return res.status(401).json({ users: [] });
 
     const users = await Users.find({ companyCode: { $eq: userDetails.companyCode } })
     //   console.log(users)
@@ -126,8 +139,8 @@ export const getAllUsers = async (req, res) => {
 
 //retrive all employees
 export const getAllEmployees = async (req, res) => {
-
-    const userDetails = JSON.parse(req.cookies.DevColab);
+    const userDetails = parseCookie(req.cookies.DevColab);
+    if (!userDetails) return res.status(401).json({ employees: [] });
     const employees = await Users.find({
         $and: [
             { companyCode: { $eq: userDetails.companyCode } },
@@ -140,8 +153,9 @@ export const getAllEmployees = async (req, res) => {
 
 // Update password
 export const changePassword = async (req, res) => {
-
-    const { role, companyCode, empID, email, password } = JSON.parse(req.cookies.DevColab);
+    const cookieData = parseCookie(req.cookies.DevColab);
+    if (!cookieData) return res.status(401).json({ success: false, message: "Unauthorized." });
+    const { role, companyCode, empID, email, password } = cookieData;
     const { newPassword } = req.body;
     // console.log(newPassword);
     // console.log({role,companyCode, empID, email, password });

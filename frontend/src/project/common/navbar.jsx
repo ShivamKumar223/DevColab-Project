@@ -166,7 +166,8 @@ const ChangePassword = ({ user, toggleChangePassword, setToggleChangePassword })
 
         if (password.newPassword === password.confirmPassword) {
             try {
-                const res = await fetch("http://localhost:5000/api/changePassword", {
+                const API_URL = import.meta.env.VITE_API_URL;
+                const res = await fetch(`${API_URL}/api/changePassword`, {
                     method: "PATCH",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ newPassword: password.newPassword }),

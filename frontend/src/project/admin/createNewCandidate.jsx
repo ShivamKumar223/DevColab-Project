@@ -17,7 +17,12 @@ export const CandidateForm = () => {
 
 export const Form = () => {
   const [user, setUser] = useState(() => {
-    return JSON.parse(Cookies.get("DevColab"));
+    try {
+      const cookie = Cookies.get("DevColab");
+      return cookie ? JSON.parse(cookie) : { companyCode: "", empID: "", role: "" };
+    } catch {
+      return { companyCode: "", empID: "", role: "" };
+    }
   })
   const [candidateData, setCandidateData] = useState({
     name:"",

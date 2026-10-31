@@ -18,9 +18,20 @@ const taskSchema = new mongoose.Schema({
 // Model creation
 export const Tasks = mongoose.model("task", taskSchema);
 
+// Safe cookie parser helper
+const parseCookie = (cookieStr) => {
+    try {
+        if (!cookieStr) return null;
+        return JSON.parse(cookieStr);
+    } catch {
+        return null;
+    }
+};
+
 // task addition
 export const addTask = async(req, res)=>{
-     const userDetails =  JSON.parse(req.cookies.DevColab);
+     const userDetails = parseCookie(req.cookies.DevColab);
+     if (!userDetails) return res.status(401).json({ success: false, message: "Unauthorized. Please log in." });
 
      const { project } = req.query;
      const task = req.body;
@@ -61,28 +72,27 @@ export const addTask = async(req, res)=>{
 }
 
 export const getAllTask = async(req, res)=>{
-   const userDetails = JSON.parse(req.cookies.DevColab);
+   const userDetails = parseCookie(req.cookies.DevColab);
+   if (!userDetails) return res.status(401).json({ success: false, message: "Unauthorized. Please log in." });
     
    if(userDetails.role == "user")
       var tasks = await Tasks.find({email:userDetails.email});
     else
         var tasks = await Tasks.find({$and:[
            {companyCode:userDetails.companyCode},
-        //    {empID:userDetails.empID}
             ]})
-//   console.log(projectDetails)
 if(tasks==null)
 {
    res.end();
 }else
-    // console.log(tasks)
    res.json(tasks);
 
 }
 
 export const updateTaskStatus = async(req, res)=>{
-   const task = JSON.parse(req.cookies.currentTask)
-//    console.log(task)
+   const task = parseCookie(req.cookies.currentTask);
+   if (!task) return res.status(400).json({ success: false, message: "No current task found." });
+
    const newStatus = req.body;
    console.log(newStatus);
    const update = await Tasks.findOneAndUpdate({

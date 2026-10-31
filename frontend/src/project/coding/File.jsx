@@ -5,9 +5,12 @@ import Cookies from "js-cookie";
 import Tree from "./Tree.jsx";
 
 export const File = ({ hide, openFile }) => {
-  const [currentTask] = useState(() =>
-    JSON.parse(Cookies.get("currentTask"))
-  );
+  const [currentTask] = useState(() => {
+    try {
+      const cookie = Cookies.get("currentTask");
+      return cookie ? JSON.parse(cookie) : { project: "", taskTitle: "" };
+    } catch { return { project: "", taskTitle: "" }; }
+  });
 
   const projectId = currentTask.project;
   const [tree, setTree] = useState(null);

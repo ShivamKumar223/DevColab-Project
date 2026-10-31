@@ -16,11 +16,22 @@ const projectSchema = new mongoose.Schema({
 // Model creation
 const Projects = mongoose.model("project", projectSchema);
 
+// Safe cookie parser helper
+const parseCookie = (cookieStr) => {
+  try {
+    if (!cookieStr) return null;
+    return JSON.parse(cookieStr);
+  } catch {
+    return null;
+  }
+};
+
 export const addNewProject = async (req, res) => {
+  const userDetails = parseCookie(req.cookies.DevColab);
+  if (!userDetails) return res.status(401).json({ success: false, message: "Unauthorized. Please log in." });
+
   const projectDetails = req.body;
-  //  console.log(projectDetails);
-  const { companyCode, empID, email, role } = JSON.parse(req.cookies.DevColab);
-  //  console.log({ companyCode, empID, email, role });
+  const { companyCode, empID, email, role } = userDetails;
   const { name } = projectDetails;
   if (role == "user") {
     var project = await Projects.findOne({
@@ -54,37 +65,35 @@ export const addNewProject = async (req, res) => {
 }
 
 export const getAllProjects = async (req, res) => {
+  const userDetails = parseCookie(req.cookies.DevColab);
+  if (!userDetails) return res.status(401).json({ success: false, message: "Unauthorized. Please log in." });
 
-  const userDetails = JSON.parse(req.cookies.DevColab);
-  // console.log(userDetails);
   if (userDetails.role == "user")
     var projects = await Projects.find({ email: userDetails.email });
   else
     var projects = await Projects.find({
       $and: [
         { companyCode: { $eq: userDetails.companyCode } },
-        // {empID:{$eq:userDetails.empID}}
       ]
     })
   res.json(projects);
 }
 
-// extrect all deatais of current project including task
+// extract all details of current project including task
 export const currentProjectDetails = async (req, res) => {
+  const userDetails = parseCookie(req.cookies.DevColab);
+  if (!userDetails) return res.status(401).json({ success: false, message: "Unauthorized. Please log in." });
+
   const { currentProject } = req.query;
-  const { role, email, companyCode, empID } = JSON.parse(req.cookies.DevColab);
+  const { role, email, companyCode, empID } = userDetails;
 
   if (role == "user") {
     var projectDetails = await Projects.findOne({ $and: [{ email: email }, { name: currentProject?.trim() }] });
     var allTask = await Tasks.find({ email: email?.trim(), project: currentProject?.trim() });
-
   }
   else {
     var projectDetails = await Projects.findOne({ $and: [{ companyCode: { $eq: companyCode } }, { name: { $eq: currentProject } }] });
     var allTask = await Tasks.find({ $and: [{ companyCode: { $eq: companyCode } }, { project: { $eq: currentProject } }] });
-  }// console.log(email)
-  // console.log(currentProject);
-  // console.log(tasks)
+  }
   res.json({ projectDetails, allTask });
-
 }

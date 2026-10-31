@@ -4,7 +4,12 @@ import Cookies from "js-cookie";
 export const AdminEmployees = () => {
     const [users, setUsers] = useState([]);
     const [userDetails, setUserDetails] = useState(() => {
-        return JSON.parse(Cookies.get("DevColab"));
+        try {
+            const cookie = Cookies.get("DevColab");
+            return cookie ? JSON.parse(cookie) : { companyCode: "" };
+        } catch {
+            return { companyCode: "" };
+        }
     })
     const companyCode = userDetails.companyCode;
     const getAllUsers = async () => {

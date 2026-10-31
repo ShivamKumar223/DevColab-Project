@@ -24,7 +24,12 @@ const Projects = () => {
     const [projects, setProjects] = useState([]);
     const [allTask, setAllTask] = useState([]);
     const [user, setUser] = useState(() => {
-        return JSON.parse(Cookies.get("DevColab"));
+        try {
+            const cookie = Cookies.get("DevColab");
+            return cookie ? JSON.parse(cookie) : { empID: "", role: "", name: "" };
+        } catch {
+            return { empID: "", role: "", name: "" };
+        }
     });
 
     useEffect(() => {

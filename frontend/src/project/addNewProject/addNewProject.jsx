@@ -16,7 +16,14 @@ export const AddNewProject = () => {
 }
 
 const ProjectDetails = () => {
-  const [user, setUser] = useState(()=> JSON.parse(Cookies.get("DevColab")));
+  const [user, setUser] = useState(() => {
+    try {
+      const cookie = Cookies.get("DevColab");
+      return cookie ? JSON.parse(cookie) : { empID: "", role: "", name: "" };
+    } catch {
+      return { empID: "", role: "", name: "" };
+    }
+  });
   const [projectDetails, setProjectDetails] = useState({ name: "", description: "", assignTo: [user.empID], startDate: "", dueDate: "" });
   const [employees, setEmployees] = useState([]);
 
