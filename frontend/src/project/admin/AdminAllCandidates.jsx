@@ -25,7 +25,7 @@ export const AdminAllCandidates = () => {
 
     useEffect(() => {
         const getAllUsers = async () => {
-            if (!companyCode || typeof companyCode !== "string") {
+            if (!companyCode) {
                 setError(
                     "User details or company code is missing. Please login again."
                 );
