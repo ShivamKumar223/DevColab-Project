@@ -51,6 +51,7 @@ app.use(
 );
 
 app.use(express.json())
+app.use(cookieParser())   // ← must be before any route that reads req.cookies
 
 
      
@@ -89,9 +90,6 @@ app.use(express.json())
 
     // To handle code board
     
-
-    // To parse cookie
-app.use(cookieParser());
 
 
 app.post("/api/signup",(req, res)=>createNewUser(req, res));

@@ -101,6 +101,11 @@ export const updateTaskStatus = async(req, res)=>{
     taskTitle:task.taskTitle
    },{$set:{status:newStatus.selectedStatus}})
    console.log(update)
-    res.cookie("currentTask",JSON.stringify(update))
+   res.cookie("currentTask", JSON.stringify(update), {
+       httpOnly: false,
+       sameSite: "none",
+       secure: true,
+       maxAge: 24 * 60 * 60 * 1000
+   });
    res.end();
 }

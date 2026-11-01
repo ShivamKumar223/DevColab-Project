@@ -4,6 +4,7 @@ import { User } from "../user.jsx";
 import { LeftMenu } from "../leftMenu.jsx";
 import { NavLink } from "react-router-dom";
 import Cookies from "js-cookie";
+import { setCookie } from "../../utils/cookieUtils.js";
 
 export const Tasks = () => {
     return (
@@ -46,7 +47,7 @@ const MainPage = () => {
     }, []);
 
     const handleTask = async (task) => {
-        Cookies.set('currentTask', JSON.stringify(task));
+        setCookie('currentTask', task);
     }
         
     if (loading) {

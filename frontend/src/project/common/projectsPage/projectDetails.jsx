@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { IoIosClose } from "react-icons/io";
 import Cookies from "js-cookie";
+import { setCookie } from "../../utils/cookieUtils.js";
 
 import { Navbar } from "../navbar.jsx";
 import { User } from "../user.jsx";
@@ -104,7 +105,7 @@ const MainPage = () => {
     }
 
     const handleTask = async (task) => {
-        Cookies.set('currentTask', JSON.stringify(task));
+        setCookie('currentTask', task);
     } 
 
     return (

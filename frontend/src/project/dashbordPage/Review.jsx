@@ -3,6 +3,7 @@ import { LeftMenu } from "../common/leftMenu";
 import { User } from "../common/user";
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
+import { setCookie } from "../utils/cookieUtils.js";
 
 export const Review = () => {
    return <div className="bg-gray-700 min-h-screen w-full relative">
@@ -52,7 +53,7 @@ const MainContent = () => {
 
 const ReviewTask = ({currTask, startDate, dueDate, ind}) => {
   const handleTask = async (task) => {
-      Cookies.set('currentTask', JSON.stringify(task));
+      setCookie('currentTask', task);
   }
 
   return (

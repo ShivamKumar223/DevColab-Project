@@ -94,7 +94,12 @@ export const verifyUser = async (req, res) => {
             authenticate: false
         });
     } else if (password == user.password) {
-        res.cookie("DevColab", JSON.stringify(user));
+        res.cookie("DevColab", JSON.stringify(user), {
+            httpOnly: false,        // frontend JS (js-cookie) must read it
+            sameSite: "none",       // required for cross-domain (Netlify <-> Render)
+            secure: true,           // required when sameSite=none
+            maxAge: 24 * 60 * 60 * 1000  // 1 day
+        });
         res.json({
             message: `Login success`,
             authenticate: true

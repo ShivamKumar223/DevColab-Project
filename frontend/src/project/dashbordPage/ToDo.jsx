@@ -3,6 +3,7 @@ import { LeftMenu } from "../common/leftMenu";
 import { User } from "../common/user";
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
+import { setCookie } from "../utils/cookieUtils.js";
 
 export const ToDo = () => {
     return (
@@ -75,7 +76,7 @@ const MainContent = () => {
 
 const TaskCard = ({ currTask, startDate, dueDate }) => {
     const handleTask = (task) => {
-        Cookies.set('currentTask', JSON.stringify(task));
+        setCookie('currentTask', task);
     };
 
     return (
